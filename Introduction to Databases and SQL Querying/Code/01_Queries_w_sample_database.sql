@@ -50,3 +50,25 @@ WHERE JobTitle LIKE '%CONTROL%'
  -- All employees born between 1.1.1970 + 1.1.1980
  SELECT * FROM [HumanResources].[Employee]
  WHERE BirthDate > '1/1/1970' AND  BirthDate < '1/1/1980' 
+
+ -- New DF
+ SELECT * FROM [Production].[Product]
+ SELECT Name, ListPrice FROM [Production].[Product]
+
+ -- Add a DF with a extra column 'Adjusted_List_Price' with the ListPrice + 10
+ SELECT Name, ListPrice, ListPrice + 10 AS Adjusted_List_Price FROM [Production].[Product]
+
+ -- Create a DF '[Production].[Product2]' with 3 columns and save it to the database
+ SELECT Name, ListPrice, ListPrice + 10 AS Adjusted_List_Price INTO [Production].[Product2] FROM [Production].[Product]
+ SELECT * FROM [Production].[Product2]
+
+ -- DELETE rows from a table based on conditions
+ DELETE FROM [Production].[Product2] WHERE NAME LIKE 'Bearing Ball'
+ SELECT * FROM [Production].[Product2]
+
+ -- Update value in a table
+ UPDATE [Production].[Product2]
+ SET Name = 'Decal 666' 
+ WHERE Name LIKE 'Decal 1'
+
+ SELECT * FROM [Production].[Product2]
