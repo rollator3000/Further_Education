@@ -24,3 +24,6 @@ SELECT TOP 10 * FROM [Production].[WorkOrder]
 SELECT WorkOrderID, ProductID, StartDate, EndDate, DATEDIFF(day, StartDate, EndDate)
 FROM [Production].[WorkOrder]
 
+
+
+-- 
