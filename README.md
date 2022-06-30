@@ -10,3 +10,8 @@ For each online-course, there is a seperate folder in this repository, whereby e
 	- A step by step introduction to the concept of Databases and Introduction to SQL Querying  
 	- For beginners with no experience in databases    
 	- Will make you familiar with SQL Syntax and introduce you to the concept of databases    
+
+#### 'Die komplette SQL Masterclass: Vom Anfänger zum Profi'
+	- 'https://www.udemy.com/course/sql-komplett/'  
+	- Learn SQL step-by-step with examples & exercises
+	- Use 'MySQL' & 'PostgreSQL' 
