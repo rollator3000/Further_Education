@@ -1,0 +1,20 @@
+# V23: 1. Exercise - 'baby_names'
+# (1) Wie viele Einträge gibt es insgesamt in der Tabelle baby_names?
+	SELECT COUNT(*) FROM baby_names
+
+# (2)  Wie viele männliche Personen (gender = M) wurden im Jahr 2010 geboren, die „Alex“ heißen?
+	SELECT COUNT(*) FROM baby_names WHERE 
+		("name" = 'Alex' AND "gender" = 'M' AND "year" = 2010)
+
+# (3) Wie viele unterschiedliche Namen gibt es in unserer Tabelle… wenn:
+# (3-1) Das Geschlecht egal ist (d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählt als der gleiche Name)
+	SELECT COUNT(DISTINCT("name")) FROM baby_names 
+
+# (3-2) Das Geschlecht nicht egal ist (d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählen als 2 unterschiedliche Namen)
+	SELECT COUNT(DISTINCT("name", "gender")) FROM baby_names 
+
+# (4) Welcher Baby-Name wurde in einem bestimmten Jahr exakt 19250 mal vergeben?
+	SELECT * FROM baby_names WHERE count = 19250
+
+# (5) Gibt es das Geschlecht „divers“ in unserer Tabelle? Kannst du das mit den dir bisher bekannten Befehlen herausfinden?
+	SELECT DISTINCT("gender") FROM baby_names  
