@@ -18,3 +18,35 @@
 
 # (5) Gibt es das Geschlecht „divers“ in unserer Tabelle? Kannst du das mit den dir bisher bekannten Befehlen herausfinden?
 	SELECT DISTINCT("gender") FROM baby_names  
+
+# V32: 2. Exercise - 'baby_names'
+# (1) Wie viele unterschiedliche Vornamen gibt es, die mit „Alex“ anfangen, „Alex“ eingeschlossen? Hierbei spielt das Geschlecht keine Rolle.
+	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE "name" LIKE 'Alex%' # -> 20 
+
+# (2) Wie viele unterschiedliche Vornamen gibt es, in denen im Vornamen ein „m“ enthalten ist? Das „m“ darf auch an erster Stelle stehen.  
+	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE "name" LIKE '%m%' OR "name" LIKE 'M%' # -> 1183	
+
+# (3) Wie viele Zeilen gibt es in der Tabelle, bei denen das Jahr im 20. Jahrhundert (1900 bis einschließlich 1999) ist?
+#     -> einmal mit BETWEEN einmal ohne
+	SELECT COUNT("year") FROM baby_names WHERE "year" BETWEEN 1900 AND 1999      # -> 100
+	SELECT COUNT("year") FROM baby_names WHERE "year" >= 1900 AND "year" <= 1999 # -> 100
+
+# (4) Wie viele Zeilen gibt es in der Tabelle, bei denen das Jahr im 20. Jahrhundert (1900 bis einschließlich 1999) ist, und durch 10 Teilbar ist?
+#	  -> Löse diese Aufgabe mit vielen ORs
+#	  -> Löse diese Aufgabe mit einem WHERE IN()
+# 	  -> Löse die Aufgabe mit einem LIKE
+#     -> Löse diese Aufgabe mit einem Modulo
+	SELECT COUNT("year") FROM baby_names WHERE 
+		"year" = 1900 OR "year" = 1910 OR "year" = 1920 OR "year" = 1930 OR
+	    "year" = 1940 OR "year" = 1950 OR "year" = 1960 OR "year" = 1970 OR
+	    "year" = 1980 OR "year" = 1990           							   # -> 15307
+
+	SELECT COUNT("year") FROM baby_names WHERE 
+		"year" IN (1990, 1980, 1970, 1960, 1950, 1940, 1930, 1920, 1910, 1900) # -> 15307
+
+	SELECT COUNT("year") FROM baby_names WHERE year::varchar LIKE '19_0'       # -> 15307
+
+	SELECT COUNT("year") FROM baby_names WHERE 								   # -> 15307
+		"year"%10 = 0 AND year BETWEEN 1900 AND 1999
+
+
