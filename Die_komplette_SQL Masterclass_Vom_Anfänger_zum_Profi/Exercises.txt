@@ -49,4 +49,26 @@
 	SELECT COUNT("year") FROM baby_names WHERE 								   # -> 15307
 		"year"%10 = 0 AND year BETWEEN 1900 AND 1999
 
+# V41: 3. Exercise - 'baby_names'
+# (1) Welcher Vorname kam insgesamt (d.h. für ein beliebiges Geschlecht in einem beliebigen Jahr) am häufigsten vor?
+	SELECT * FROM baby_names ORDER BY "count" DESC LIMIT 3 # -> Linda
+
+# (2) Welches Jahr ist das erste Jahr in unserer Datenbasis?
+#		-> Löse dies mit Hilfe der MIN()-Funktion
+#		-> Löse dies ohne die MIN()-Funktion
+	SELECT MIN("year") FROM baby_names                               # -> 1880
+	SELECT DISTINCT("year") FROM baby_names ORDER BY "year" LIMIT 5  # -> 1880
+
+# (3) Wie viele unterschiedliche Vornamen gibt es, die aus exakt 5 Buchstaben bestehen?
+#		-> Löse dies mit einem WHERE und der LENGTH()-Funktion
+#		-> Löse dies mit einem WHERE und einem LIKE (hier gab es einen speziellen Platzhalter)
+	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE LENGTH("name") = 5  # -> 1590
+	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE "name" LIKE '_____' # -> 1590
+
+# (4) Wie viele Babys sind für das Jahr 2000 insgesamt in unserer Datenbasis? Berechne hier die Summe aller Einträge!
+	SELECT SUM(count) FROM baby_names WHERE year = 2020 # -> 3.320.671
+
+# (5) Wenn wir alle unterschiedlichen Vornamen betrachten (Geschlecht ist egal), und aufsteigend alphabetisch sortieren… 
+#     Welcher Vorname steht auf der 2. Seite ganz oben, wenn die erste Seite aus 10 Einträgen besteht?
+	SELECT DISTINCT("name") FROM baby_names ORDER BY "name" OFFSET 10 LIMIT 1 # -> Aarna
 
