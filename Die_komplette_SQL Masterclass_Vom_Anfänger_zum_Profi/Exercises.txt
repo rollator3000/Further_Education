@@ -72,3 +72,20 @@
 #     Welcher Vorname steht auf der 2. Seite ganz oben, wenn die erste Seite aus 10 Einträgen besteht?
 	SELECT DISTINCT("name") FROM baby_names ORDER BY "name" OFFSET 10 LIMIT 1 # -> Aarna
 
+# V54: 4. Exercise - 'locations'
+# (1) Leider hat sich in diesen Daten ein kleiner Fehler eingeschlichen. Die Adresse der „Buchhandlung DOM“ ist das 
+#     Domkloster 4 und nicht das Domkloster 1. Aktualisiere daher die Daten mit einem UPDATE-Befehl.
+#		- Hinweis 1: Beachte hierbei, dass die Stadt und die Postleitzahl erhalten bleibt
+#		- Hinweis 2: Genau aus diesem Grund speichert man die Adresse oft aufgeteilt in verschiedenen Feldern in der Datenbank, 
+#                    d.h. 1 Feld für die Straße, eins für die Stadt, eins für die Postleitzahl,…
+	UPDATE locations SET address = 'Domkloster 4, 50667 Köln' WHERE address = 'Domkloster 1, 50667 Köln' 
+
+# (2) Die Buchhandlung Alexanderplatz musste Anfang dieses Monats geschlossen werde. Entferne sie daher aus der Datenbank!
+	DELETE FROM locations WHERE id = 2
+
+# (3) Eine neue Buchhandlung soll nach nur 20 Jahren Bauzeit noch diesen Monat in Berlin eröffnet werden. Füge daher folgenden 
+#     Eintrag in die Datenbank ein:
+#		- Titel: Buchhandlung Flughafen BER
+#		- Adresse: Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland
+	INSERT INTO locations ("title", "address") VALUES ('Buchhandlung Flughafen BER', 'Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland')
+
