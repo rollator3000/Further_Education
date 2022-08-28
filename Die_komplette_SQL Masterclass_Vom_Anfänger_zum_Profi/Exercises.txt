@@ -117,6 +117,18 @@
 #               jeweils nur einen Wert aggregieren (z.B. die Anzahl ermitteln,…). Es wird hier nicht zwingend die Angabe einer Tabelle benötigt!
 #     > Tipp 2: Auch kannst du die Ergebnisse direkt miteinander verrechnen: SELECT (SUBQUERY) / (SUBQUERY). Wichtig: Funktioniert so nur in
 #               MySQL, unter PostgreSQL gibt es noch was zu beachten – siehe Musterlösung.
+		# --> Get amount of books with german language
+		SELECT COUNT(*) from books
+		    WHERE language = 'de'
+		# --> Get amount of books in total
+		SELECT COUNT(*) from books
+
+		# --> How to divide the two relevant columns..?!
+		SELECT *,
+		    (SELECT COUNT(*) from books WHERE language = 'de') AS amount_german,
+		    (SELECT COUNT(*) from books) AS amount_total
+		FROM books LIMIT 1
+
 
 # (2) Betrachte die Tabelle books. Jedes Buch hat ein Thema / eine Kategorie, die entsprechende Information hierzu findet sich in der Tabelle 
 #     books_subjects. Erstelle eine Auflistung aller Bücher inkl. dem jeweiligen Thema!
