@@ -117,24 +117,25 @@
 #               jeweils nur einen Wert aggregieren (z.B. die Anzahl ermitteln,…). Es wird hier nicht zwingend die Angabe einer Tabelle benötigt!
 #     > Tipp 2: Auch kannst du die Ergebnisse direkt miteinander verrechnen: SELECT (SUBQUERY) / (SUBQUERY). Wichtig: Funktioniert so nur in
 #               MySQL, unter PostgreSQL gibt es noch was zu beachten – siehe Musterlösung.
-		# --> Get amount of books with german language
-		SELECT COUNT(*) from books
-		    WHERE language = 'de'
-		# --> Get amount of books in total
-		SELECT COUNT(*) from books
-
 		# --> How to divide the two relevant columns..?!
-		SELECT *,
-		    (SELECT COUNT(*) from books WHERE language = 'de') AS amount_german,
-		    (SELECT COUNT(*) from books) AS amount_total
-		FROM books LIMIT 1
+		SELECT
+    		(SELECT COUNT(*) from books WHERE language = 'de') / # Amount of german books
+    		(SELECT COUNT(*) from books)                         # Amount of all books
 
 
 # (2) Betrachte die Tabelle books. Jedes Buch hat ein Thema / eine Kategorie, die entsprechende Information hierzu findet sich in der Tabelle 
 #     books_subjects. Erstelle eine Auflistung aller Bücher inkl. dem jeweiligen Thema!
+		SELECT title, 
+		    (SELECT title FROM books_subjects 
+		        	WHERE books.subject_id = books_subjects.id) AS Category
+		FROM books
 
 # (3) Betrachte die Tabelle books_subjects, ein Thema kann von mehreren Büchern verwendet werden. Wie oft kommt das beliebteste Thema vor?
 #     Bzw. anders ausgedrückt: Zu welchem Thema gibt es am meisten Bücher, und wie viele Bücher sind das?
+		SELECT title,
+		    (SELECT COUNT(*) FROM books 
+		            WHERE books.subject_id = books_subjects.id) AS topic_freq
+		FROM books_subjects ORDER BY topic_freq DESC
 
 # (4) Betrachte die Tabelle books. Welcher Autor hat bisher am meisten Bücher veröffentlicht?
 # 	  > Tipp 1: Ermittle also zuerst alle unterschiedlichen Autoren, die es in der Tabelle gibt
@@ -142,4 +143,11 @@
 #               entsprechende Anzahl an Büchern ermittelt
 #     > Tipp 3: Beachte hierbei, dass hier das Subselect 2x auf der gleichen Tabelle ausgeführt wird – hier wirst du die Tabellen also u.U. 
 #               mit einem AS benennen müssen!
-# ---> Hinweis: Das würde mit einem GROUP BY sehr viel effizienter gehen – das haben wir uns aber noch nicht angeschaut… 
+# ---> Hinweis: Das würde mit einem GROUP BY sehr viel effizienter gehen – das haben wir uns aber noch nicht angeschaut…
+		SELECT DISTINCT(creator),
+		    (SELECT COUNT(*) FROM books AS books_new 
+		            WHERE books_new.creator = books_old.creator) AS amount_books
+		FROM books AS books_old ORDER BY amount_books DESC
+
+
+ 
