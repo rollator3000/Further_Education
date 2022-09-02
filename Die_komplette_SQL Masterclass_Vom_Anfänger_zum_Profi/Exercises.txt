@@ -119,8 +119,8 @@
 #               MySQL, unter PostgreSQL gibt es noch was zu beachten – siehe Musterlösung.
 		# --> How to divide the two relevant columns..?!
 		SELECT
-    		(SELECT COUNT(*) from books WHERE language = 'de') / # Amount of german books
-    		(SELECT COUNT(*) from books)                         # Amount of all books
+    		(SELECT COUNT(*) from books WHERE language = 'de')::float /  / # Amount of german books
+    		(SELECT COUNT(*) from books)::float /                          # Amount of all books
 
 
 # (2) Betrachte die Tabelle books. Jedes Buch hat ein Thema / eine Kategorie, die entsprechende Information hierzu findet sich in der Tabelle 
