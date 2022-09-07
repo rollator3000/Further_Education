@@ -169,3 +169,83 @@
 		    LEFT JOIN books_subjects ON books.subject_id = books_subjects.id
 		    WHERE books.language = 'de' 
 		    AND books_subjects.title LIKE '%Love stories%'
+
+# V120 7. Exercise GROUP BY
+
+# (1) In der Tabelle „baby_names“ finden sich Geburtsstatistiken aus den USA. Diese wollen wir in dieser Aufgabe statistisch auswerten...
+# 	  1.1 Welcher Vorname wurde insgesamt am häufigsten vergeben? Das Geschlecht spielt hierbei keine Rolle
+		SELECT name, SUM(count) FROM baby_names
+		    GROUP BY name 
+		    ORDER BY SUM(count) DESC
+
+#	  1.2 Welcher Vorname wurde im Jahr 1950 am häufigsten vergeben? Das Geschlecht spielt hierbei keine Rolle
+		SELECT name, count FROM baby_names
+		    WHERE year = 1950
+		    GROUP BY name, count
+		    ORDER BY count DESC 
+
+#     1.3 Erstelle eine Auflistung von allen Vornamen, welche insgesamt mehr als 5 Millionen mal vergeben wurden. 
+#         Versuche, diese Auflistung mit nur einer Query zu generieren. Wie viele Einträge erscheinen hier in der Auflistung?
+		SELECT name, SUM(count) FROM baby_names
+		    GROUP BY name 
+		    HAVING SUM(count) > 5000000
+		    ORDER BY SUM(count) DESC
+
+#     1.4 In welchem Jahr wurden am meisten verschiedene Vornamen vergeben?
+		SELECT year, COUNT(DISTINCT(name)) FROM baby_names
+		    GROUP BY year
+		    ORDER BY COUNT(DISTINCT(name)) DESC
+
+#     1.5 Gibt es insgesamt mehr weibliche oder mehr männliche Babys in der Statistik?
+#			--> also possible with SUBSELECT SELECT, 
+		SELECT gender, SUM(count) FROM baby_names
+		    GROUP BY gender
+		    ORDER BY SUM(count) DESC
+
+#     1.6 Mit welchem Buchstaben begann im Jahr 2010 der Name der meisten Babys? 
+#         Den ersten Buchstaben kannst du über SUBSTR(spalte, 1, 1) ermitteln.
+		SELECT SUBSTR(name, 1, 1), SUM(count) FROM baby_names
+		    WHERE year = 2010
+		    GROUP BY SUBSTR(name, 1, 1)
+		    ORDER BY COUNT(*) DESC
+
+#     1.7 Bonus (nicht zwingend GROUP BY): Wie viele Vornamen aus dem Jahr 1880 gibt es im Jahr 2010 nicht mehr?  
+		SELECT name FROM baby_names
+		    WHERE year = 1880 AND
+		    (SELECT COUNT(*) FROM baby_names as b2  WHERE b2.name = baby_names.name AND b2.year = 2010) = 0
+
+# (2) Betrachte die Tabelle „books“, in dieser sind diverse Daten zu Büchern gespeichert. 
+#     Fast jedes Buch hat ein verknüpftes Thema (Spalte: subject_id), dieses Thema wird in der Tabelle „books_subjects“ abgespeichert.
+#     2.1 Zu welchem Thema gibt es am meisten Bücher? Löse diese Frage mit einem JOIN + GROUP BY
+		SELECT books_subjects.title, COUNT(books_subjects.title) FROM books
+		    LEFT JOIN books_subjects ON books.subject_id = books_subjects.id
+		    GROUP BY books_subjects.title
+		    ORDER BY COUNT(books_subjects.title) DESC # --> 1.750 Fiction
+
+#     2.2 Welcher Autor hat am meisten Liebesromane (books_subjects.title = 'Love stories') geschrieben? 
+#         Löse diese Frage mit einem JOIN + GROUP BY
+		SELECT books.creator, COUNT(books.creator) FROM books
+		    LEFT JOIN books_subjects ON books.subject_id = books_subjects.id
+		    WHERE books_subjects.title LIKE '%Love stories%'
+		    GROUP BY books.creator 
+		    ORDER BY COUNT(books.creator) DESC # --> Bar Amelia & Bacon Josephine: 5x LoveStories
+
+#     2.3 Welcher Autor hat am meisten Downloads? Beachte, dass ein Autor mehrere Bücher haben kann, die entsprechenden Downloads
+#         müssen aufsummiert werden - Wichtig: „Various“, NULL, Anonymous,… zählen hierbei nicht als Autor
+		SELECT books.creator, SUM(books.downloads) FROM books
+		    GROUP BY books.creator 
+		    ORDER BY SUM(books.downloads) DESC # --> Austen, Jane: 44.177x
+
+#     2.4 Schreibe eine Query, die alle Autoren ausgibt, die mehr als 30.000 Downloads mit ihren Büchern erreicht haben. 
+#         Frage: Wie viele Autoren sind in dieser Auflistung enthalten? - Wichtig: „Various“, NULL, Anonymous,… zählen hierbei nicht als Autor
+		SELECT books.creator, SUM(books.downloads) FROM books
+		    GROUP BY books.creator 
+		    HAVING SUM(books.downloads) > 30000
+		    ORDER BY SUM(books.downloads) DESC # --> 4 authors
+
+#     2.5 Wir möchten ein neues Buch veröffentlichen, dieses soll sich aber so gut wie möglich verkaufen. 
+#         In welcher Sprache sollten wir dieses Buch schreiben? Bzw. anders ausgedrückt: Für welche Sprache gibt es aktuell durchschnittlich 
+#         die meisten Downloads pro Buch?
+		SELECT language, SUM(books.downloads) / COUNT(*) FROM books
+		    GROUP BY books.language 
+		    ORDER BY SUM(books.downloads) / COUNT(*) DESC #--> KO 455 sales per book
