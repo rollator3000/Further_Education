@@ -249,3 +249,12 @@
 		SELECT language, SUM(books.downloads) / COUNT(*) FROM books
 		    GROUP BY books.language 
 		    ORDER BY SUM(books.downloads) / COUNT(*) DESC #--> KO 455 sales per book
+
+# 135 8. Exercise DATUMSWERTE
+# Betrachte die Tabelle „books“, in dieser sind diverse Daten zu Büchern gespeichert.
+# 	  1.1 Wie viele Bücher wurden im Jahr 2005 herausgegeben?
+
+#  	  1.2 Betrachte die Spalte „issued“. In welchem Monat werden im Schnitt am meisten neue Bücher herausgegeben?
+
+#	  1.3 Schwer: Welcher Autor war am längsten aktiv? Anders ausgedrückt: 
+#         Bei welchem Autor ist die Zeitdifferenz zwischen dem Herausgabedatum seines ersten Buches und seines letzten Buches am größten?
