@@ -253,8 +253,16 @@
 # 135 8. Exercise DATUMSWERTE
 # Betrachte die Tabelle „books“, in dieser sind diverse Daten zu Büchern gespeichert.
 # 	  1.1 Wie viele Bücher wurden im Jahr 2005 herausgegeben?
+		SELECT COUNT(*) FROM books
+		    WHERE DATE_PART('year', issued) = '2005'
 
 #  	  1.2 Betrachte die Spalte „issued“. In welchem Monat werden im Schnitt am meisten neue Bücher herausgegeben?
+		SELECT DATE_PART('month', issued), COUNT(*) AS counts FROM books
+		    GROUP BY DATE_PART('month', issued)
+		    ORDER BY counts DESC
 
 #	  1.3 Schwer: Welcher Autor war am längsten aktiv? Anders ausgedrückt: 
 #         Bei welchem Autor ist die Zeitdifferenz zwischen dem Herausgabedatum seines ersten Buches und seines letzten Buches am größten?
+		SELECT creator, MIN(issued), MAX(issued), MAX(issued) - MIN(issued) AS DIFF from books
+		    GROUP BY creator
+		    ORDER BY DIFF DESC
