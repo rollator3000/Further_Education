@@ -266,3 +266,34 @@
 		SELECT creator, MIN(issued), MAX(issued), MAX(issued) - MIN(issued) AS DIFF from books
 		    GROUP BY creator
 		    ORDER BY DIFF DESC
+
+# 149 9. Exercise INDEXE
+# Betrachte die Tabelle „baby_names“.
+# Sortiere die Tabelle nach dem Namen. 
+		SELECT * FROM baby_names
+    		ORDER BY name ASC # --> 00:00:01.493
+
+# Wie lange dauert dies im Vergleich zu einer Sortierung nach einer anderen Spalte? 
+		SELECT * FROM baby_names
+    		ORDER BY year ASC # --> 00:00:01.392
+
+    	SELECT * FROM baby_names
+    		ORDER BY gender ASC # --> 00:00:01.302
+
+    	SELECT * FROM baby_names
+    		ORDER BY id ASC # --> 00:00:01.669
+
+    	SELECT * FROM baby_names
+    		ORDER BY count ASC # --> 00:00:01.210
+
+# Wie könntest du diese Sortierung beschleunigen?
+		CREATE INDEX name_id ON baby_names (
+    		name ASC
+		)
+
+		SELECT * FROM baby_names
+		    ORDER BY name ASC # --> 00:00:00.782
+
+		# OBACHT 
+		SELECT * FROM baby_names
+    		ORDER BY name DESC # --> 00:00:02.167 -> andere Ordnung als IDX -> langsamer
