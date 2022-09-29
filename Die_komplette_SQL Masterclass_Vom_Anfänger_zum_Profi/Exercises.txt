@@ -329,4 +329,12 @@ SELECT * FROM loggs
 SELECT * FROM customer_info_w_logg(23)
 SELECT * FROM loggs
 
+# 237 11. Exercise TRIGGER
+# 'customers' hat alle Kunden & für eine Anwendung brauchen wir für jeden Kunden den gesamtem Umsatz 
+# - füge dies als extra Spalte zu 'customers' hinzu (Umsatz berechnet sich über 'amount' in 'orders'
+#     --> Löse dieses Problem über verschiedene Wege
+# (1) Über einen normal VIEW lösen
+# (2) Über einen materialized VIEW
+# (3) Über einen Trigger - neue Spalte erstellen & immer updaten, wenn sich was bei 'orders' ändert
+
 
