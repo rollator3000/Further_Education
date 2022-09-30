@@ -334,7 +334,19 @@ SELECT * FROM loggs
 # - füge dies als extra Spalte zu 'customers' hinzu (Umsatz berechnet sich über 'amount' in 'orders'
 #     --> Löse dieses Problem über verschiedene Wege
 # (1) Über einen normal VIEW lösen
+SELECT *,
+    (SELECT SUM(amount) FROM orders WHERE customers.id = orders.customer_id) AS Totally_Spent
+    FROM customers
+
 # (2) Über einen materialized VIEW
+CREATE MATERIALIZED VIEW customers_spent AS 
+    SELECT *, 
+        (SELECT SUM(amount) FROM orders WHERE customers.id = orders.customer_id) AS Totally_Spent
+    FROM customers
+    
+SELECT * FROM customers_spent
+
 # (3) Über einen Trigger - neue Spalte erstellen & immer updaten, wenn sich was bei 'orders' ändert
+
 
 
