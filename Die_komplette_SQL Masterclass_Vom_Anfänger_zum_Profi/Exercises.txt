@@ -350,6 +350,110 @@ CREATE MATERIALIZED VIEW customers_spent AS
 SELECT * FROM customers_spent
 
 # (3) Über einen Trigger - neue Spalte erstellen & immer updaten, wenn sich was bei 'orders' ändert
+#   Add a column 'spent_all' to customers 
+ALTER TABLE customers
+    ADD COLUMN spent_all DECIMAL(10, 2)
+    
+#   Fill the values to 'spent_all' */
+UPDATE customers 
+    SET spent_all = (SELECT SUM(amount) FROM orders 
+                        WHERE orders.customer_id = customers.id)
+    
+#   Delete triggers, so we can run the code again 
+DROP TRIGGER IF EXISTS orders_after_insert_trigger ON orders;
+DROP FUNCTION IF EXISTS orders_after_insert();
+
+#   Write a Trigger-Function for when something is inserted in orders
+CREATE FUNCTION orders_after_insert() # -> Must not take any arguments 
+    RETURNS TRIGGER
+    LANGUAGE 'plpgsql'
+    VOLATILE AS $CODE$ BEGIN
+        UPDATE customers SET spent_all = 
+            (SELECT SUM(amount) FROM orders 
+                WHERE orders.customer_id = customers.id)
+                WHERE customers.id = NEW.customer_id;
+        RETURN NEW;
+    END $CODE$;
+    
+# 	Write the trigger itself */
+CREATE TRIGGER orders_after_insert_trigger
+    AFTER INSERT ON orders
+    FOR EACH ROW EXECUTE PROCEDURE orders_after_insert();
+
+#	Check the Trigger-Function */
+SELECT * FROM customers WHERE ID = 1
+SELECT * FROM orders WHERE customer_id = 1
+
+INSERT INTO orders (timestamp, amount, customer_id) 
+    VALUES (CURRENT_TIMESTAMP, 100, 1)
+    
+SELECT * FROM customers WHERE ID = 1 /* Has been updated now! */
 
 
+#	Delete triggers, so we can run the code again */
+DROP TRIGGER IF EXISTS orders_after_delete_trigger ON orders;
+DROP FUNCTION IF EXISTS orders_after_delete();
+
+#	Write a Trigger-Function for when something is deleted in orders */
+CREATE FUNCTION orders_after_delete() /* Must not take any arguments */ 
+    RETURNS TRIGGER
+    LANGUAGE 'plpgsql'
+    VOLATILE AS $CODE$ BEGIN
+        UPDATE customers SET spent_all = 
+            (SELECT SUM(amount) FROM orders 
+                WHERE orders.customer_id = customers.id)
+                WHERE customers.id = OLD.customer_id;
+        RETURN NEW;
+    END $CODE$;
+    
+#	Write the trigger itself */
+CREATE TRIGGER orders_after_delete_trigger
+    AFTER DELETE ON orders
+    FOR EACH ROW EXECUTE PROCEDURE orders_after_delete();
+    
+#	Check the Trigger-Function */
+SELECT * FROM customers WHERE ID = 1
+SELECT * FROM orders WHERE customer_id = 1
+
+DELETE FROM orders WHERE id = 1053
+    
+SELECT * FROM customers WHERE ID = 1
+SELECT * FROM orders WHERE customer_id = 1 /* Has been updated now! */
+
+
+#	Delete triggers, so we can run the code again */
+DROP TRIGGER IF EXISTS orders_after_update_trigger ON orders;
+DROP FUNCTION IF EXISTS orders_after_update();
+
+#	Write a Trigger-Function for when something is deleted in orders */
+CREATE FUNCTION orders_after_update() /* Must not take any arguments */ 
+    RETURNS TRIGGER
+    LANGUAGE 'plpgsql'
+    VOLATILE AS $CODE$ BEGIN
+        UPDATE customers SET spent_all = 
+            (SELECT SUM(amount) FROM orders 
+                WHERE orders.customer_id = customers.id)
+                WHERE customers.id = NEW.customer_id OR
+                      customers.id = OLD.customer_id;
+        RETURN NEW;
+    END $CODE$;
+    
+#	Write the trigger itself */
+CREATE TRIGGER orders_after_update_trigger
+    AFTER UPDATE ON orders
+    FOR EACH ROW EXECUTE PROCEDURE orders_after_update();
+    
+#	Check the Trigger-Function */
+SELECT * FROM customers WHERE ID = 1
+SELECT * FROM orders WHERE customer_id = 1
+
+UPDATE orders SET amount = 100 WHERE customer_id = 1 
+
+SELECT * FROM orders WHERE customer_id = 1 
+SELECT * FROM customers WHERE ID = 1 /* Both has been updated now! */
+
+SELECT * FROM customers WHERE ID in (1, 2)
+UPDATE orders SET customer_id = 2 WHERE customer_id = 1
+SELECT * FROM orders WHERE customer_id in (1,2)
+SELECT * FROM customers WHERE ID in (1, 2) /* Both has been updated now! */
 
