@@ -39,9 +39,10 @@ Used to select columns from a data-base. <br/>
 	- Case-Sensitive
 
 **Example**
+Select all columns from data-base// only columns A, B from TABLE 
 
-	SELECT * FROM TABLE				# -> All columns from data-base TABLE
-	SELECT "A", "B" FROM TABLE		# -> Get the columns A, B from TABLE
+	SELECT * FROM TABLE			
+	SELECT "A", "B" FROM TABLE		# -> 
 
 #### WHERE 
 Select rows that full-fill a condition. <br/> 
@@ -50,16 +51,18 @@ Select rows that full-fill a condition. <br/>
 
 	- Mathematically: >, <, >=, <=
 	- Equal/ Unequal: =, <>
-	- Mulitple Conditions: AND, OR
+	- AND, OR
 		- in brackets: ... WHERE ("name" = 'Alex' AND "gender" = 'M' AND "year" = 2010)
 	- NOT:
 		- in brackets: ... WHERE NOT("age" > 20) 
 
 **Example**
+Get all columns for the rows, where title = 'Hr. Dr'// 'Fr. Dr' & where AGE > 30
 
-	SELECT * FROM TABLE									# -> Get all columns for the rows, 
-	WHERE (TITLE = 'Fr. Dr.' OR TITLE = 'Hr. Dr') AND  	#    where title = 'Hr. Dr'// 'Fr. Dr'
-		   AGE > 30  									#    & AGE > 30
+	SELECT * 
+	FROM TABLE
+	WHERE (TITLE = 'Fr. Dr.' OR TITLE = 'Hr. Dr') AND	
+		  AGE > 30  							
 
 #### COUNT & DISTINCT
 
