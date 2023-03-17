@@ -1,8 +1,14 @@
-# Online-Courses  
-Collection of all online-courses I've finished - the courses contain personal notes, the necessary files, as well as exercises & examples etc.!  
+# Further Education
+Collection of online-courses, books, etc. I've worked with.  
+To each book/ course there are personal notes, necessary files, as well as exercises & examples.  
 
-## Courses
-For each online-course, there is a seperate folder in this repository, whereby each folder contains code, files & docs.     
+## Sections
+For each course/ book, there is a seperate folder - each containing code, files & docs.     
+
+#### 'Die komplette SQL Masterclass: Vom Anfänger zum Profi'
+	- 'https://www.udemy.com/course/sql-komplett/'  
+	- Learn 'MySQL' & 'PostgreSQL' step-by-step with examples & exercises
+	- Slides, Exercises, DataBank & personal notes
 
 #### 'Introduction to Databases and SQL Querying'  
 	- https://www.udemy.com/course/introduction-to-databases-and-sql-querying/
@@ -11,7 +17,3 @@ For each online-course, there is a seperate folder in this repository, whereby e
 	- For beginners with no experience in databases    
 	- Will make you familiar with SQL Syntax and introduce you to the concept of databases    
 
-#### 'Die komplette SQL Masterclass: Vom Anfänger zum Profi'
-	- 'https://www.udemy.com/course/sql-komplett/'  
-	- Learn SQL step-by-step with examples & exercises
-	- Use 'MySQL' & 'PostgreSQL' 
