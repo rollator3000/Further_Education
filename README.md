@@ -5,6 +5,7 @@ To each book/ course there are personal notes, necessary files, as well as exerc
 ## Sections
 For each course/ book, there is a seperate folder - each containing code, files & docs.     
 
+### COURSES
 #### 'Die komplette SQL Masterclass: Vom Anfänger zum Profi'
 	- 'https://www.udemy.com/course/sql-komplett/'  
 	- Learn 'MySQL' & 'PostgreSQL' step-by-step with examples & exercises
@@ -17,3 +18,4 @@ For each course/ book, there is a seperate folder - each containing code, files 
 	- For beginners with no experience in databases    
 	- Will make you familiar with SQL Syntax and introduce you to the concept of databases    
 
+### BOOKS
