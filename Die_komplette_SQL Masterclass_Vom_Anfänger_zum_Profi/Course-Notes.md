@@ -2,7 +2,7 @@
 
 Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Profi' - https://www.udemy.com/course/sql-komplett/
 
-## (1) Introduction
+# (1) Introduction
 This course covers the two databank-systems 'MySQL' & 'PostgreSQL' - both are commonly used frameworks with only small differences.  
 - MySQL:  
 	- Less Features than PostgreSQL   
@@ -21,7 +21,7 @@ Select the columns "id", "creator", "title" & "downloads" from the table "books"
 		FROM books
 		WHERE creator = 'Niemann, August'
 
-## (2) Installation of PostgreSQL
+# (2) Installation of PostgreSQL
 As MySQL doesn't work on MacOS, I've only set-up PostgreSQL. <br/> 
 
 	- Download of a databank *(s. 'data/')*
@@ -30,8 +30,8 @@ As MySQL doesn't work on MacOS, I've only set-up PostgreSQL. <br/>
 		- Servers
 		- Creation of new data-base
 
-## (3) Databank Queries
-### SELECT
+# (3) Databank Queries
+## SELECT
 Select columns from a data-base. <br/> 
 - Optimally, put colnames in " " *(' ' doesn't work)*  
 - Case-Sensitive
@@ -42,7 +42,7 @@ Select all columns from data-base// only columns A, B from TABLE
 	SELECT * FROM TABLE			
 	SELECT "A", "B" FROM TABLE
 
-### WHERE 
+## WHERE 
 Select rows that full-fill a condition. <br/> 
 - Mathematically: >, <, >=, <=
 - Equal/ Unequal: =, <>
@@ -60,7 +60,7 @@ Get all columns for the rows, where title = 'Hr. Dr'// 'Fr. Dr' & where AGE > 30
 	WHERE (TITLE = 'Fr. Dr.' OR TITLE = 'Hr. Dr') AND	
 		AGE > 30  							
 
-### COUNT & DISTINCT
+## COUNT & DISTINCT
 - 'COUNT' counts the amount of rows
 - 'DISTINCT' shows all unique values of a column  
 	- use brackets over multiple columns 
@@ -83,14 +83,14 @@ Get the amount of individual names from TABLE
 	SELECT COUNT(DISTINCT("name", "lastname"))
 	FROM TABLE
 
-### 1. Exercise - 'baby_names'
+## 1. Exercise - 'baby_names'
 Wie viele Einträge gibt es insgesamt in der Tabelle baby_names?
 
-	SELECT COUNT(\*) FROM baby_names
+	SELECT COUNT(*) FROM baby_names
 
 Wie viele männliche Personen (gender = M) wurden im Jahr 2010 geboren, die „Alex“ heißen?
 
-	SELECT COUNT(\*) FROM baby_names 
+	SELECT COUNT(*) FROM baby_names 
 	WHERE ("name" = 'Alex' AND "gender" = 'M' AND "year" = 2010)
 
 Wie viele unterschiedliche Namen gibt es in unserer Tabelle, wenn das Geschlecht egal ist *(d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählt als der gleiche Name)*
@@ -110,7 +110,7 @@ Gibt es das Geschlecht „divers“ in unserer Tabelle?
 
 	SELECT DISTINCT("gender") FROM baby_names 
 
-### LIKE
+## LIKE
 Effective fullltext search - e.g. all E-Mails that contain '@gmail'.  
 
 - LIKE % = none, one or multiple letters
@@ -143,4 +143,4 @@ Get all rows of names starting with 'a' and 3 more letters
 	SELECT * FROM TABLE
 	WHERE name LIKE 'a____'
 
-### IN & BETWEEN
+## IN & BETWEEN
