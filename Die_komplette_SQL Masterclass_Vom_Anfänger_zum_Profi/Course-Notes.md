@@ -84,30 +84,29 @@ Get the amount of individual names from TABLE
 	FROM TABLE
 
 ### 1. Exercise - 'baby_names'
-- Wie viele Einträge gibt es insgesamt in der Tabelle baby_names?
+Wie viele Einträge gibt es insgesamt in der Tabelle baby_names?
 
 	SELECT COUNT(\*) FROM baby_names
 
-- Wie viele männliche Personen (gender = M) wurden im Jahr 2010 geboren, die „Alex“ heißen?
+Wie viele männliche Personen (gender = M) wurden im Jahr 2010 geboren, die „Alex“ heißen?
 
 	SELECT COUNT(\*) FROM baby_names 
 	WHERE ("name" = 'Alex' AND "gender" = 'M' AND "year" = 2010)
 
-- Wie viele unterschiedliche Namen gibt es in unserer Tabelle… wenn:
-	- Das Geschlecht egal ist *(d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählt als der gleiche Name)*
+Wie viele unterschiedliche Namen gibt es in unserer Tabelle, wenn das Geschlecht egal ist *(d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählt als der gleiche Name)*
 
 	SELECT COUNT(DISTINCT("name")) FROM baby_names 
 
-	- Das Geschlecht nicht egal ist *(d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählen als 2 unterschiedliche Namen)*
+Wie viele unterschiedliche Namen gibt es in unserer Tabelle, wenn das Geschlecht nicht egal ist *(d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählen als 2 unterschiedliche Namen)*
 	
 	SELECT COUNT(DISTINCT("name", "gender")) FROM baby_names 
 
-- Welcher Baby-Name wurde in einem bestimmten Jahr exakt 19250 mal vergeben?
+Welcher Baby-Name wurde in einem bestimmten Jahr exakt 19250 mal vergeben?
 	
 	SELECT * FROM baby_names 
 	WHERE count = 19250
 
-- Gibt es das Geschlecht „divers“ in unserer Tabelle? 
+Gibt es das Geschlecht „divers“ in unserer Tabelle? 
 
 	SELECT DISTINCT("gender") FROM baby_names 
 
