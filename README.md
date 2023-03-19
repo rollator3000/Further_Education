@@ -7,9 +7,9 @@ For each course/ book, there is a seperate folder - each containing code, files 
 
 ### COURSES
 #### 'Die komplette SQL Masterclass: Vom Anfänger zum Profi'
-	- 'https://www.udemy.com/course/sql-komplett/'  
-	- Learn 'MySQL' & 'PostgreSQL' step-by-step with examples & exercises
-	- Slides, Exercises, DataBank & personal notes
+	- https://www.udemy.com/course/sql-komplett/
+	- 'MySQL' & 'PostgreSQL' step-by-step w/ examples & exercises
+	- Slides, exercises, data & notes
 
 #### 'Introduction to Databases and SQL Querying'  
 	- https://www.udemy.com/course/introduction-to-databases-and-sql-querying/
