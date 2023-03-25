@@ -171,20 +171,23 @@ Einmal mit BETWEEN einmal ohne
 
 ### (4) Wie viele Zeilen gibt es in der Tabelle, bei denen das Jahr im 20. Jahrhundert (1900 bis einschließlich 1999) ist, und durch 10 Teilbar ist?
 
-- Löse diese Aufgabe mit vielen ORs
-- Löse diese Aufgabe mit einem WHERE IN()
-- Löse die Aufgabe mit einem LIKE
-- Löse diese Aufgabe mit einem Modulo
+Löse diese Aufgabe mit vielen ORs
 
 	SELECT COUNT("year") FROM baby_names WHERE 
 		"year" = 1900 OR "year" = 1910 OR "year" = 1920 OR "year" = 1930 OR
 	    "year" = 1940 OR "year" = 1950 OR "year" = 1960 OR "year" = 1970 OR
-	    "year" = 1980 OR "year" = 1990           							   # -> 15307
+	    "year" = 1980 OR "year" = 1990 # -> 15307
+
+Löse diese Aufgabe mit einem WHERE IN()
 
 	SELECT COUNT("year") FROM baby_names WHERE 
 		"year" IN (1990, 1980, 1970, 1960, 1950, 1940, 1930, 1920, 1910, 1900) # -> 15307
 
+Löse die Aufgabe mit einem LIKE
+
 	SELECT COUNT("year") FROM baby_names WHERE year::varchar LIKE '19_0'       # -> 15307
+
+Löse diese Aufgabe mit einem Modulo
 
 	SELECT COUNT("year") FROM baby_names WHERE 								   # -> 15307
 		"year"%10 = 0 AND year BETWEEN 1900 AND 1999
@@ -235,17 +238,21 @@ Use 'AS' to name columns.
 	SELECT * FROM baby_names ORDER BY "count" DESC LIMIT 3 # -> Linda
 
 ### (2) Welches Jahr ist das erste Jahr in unserer Datenbasis?
-- Löse dies mit Hilfe der MIN()-Funktion
-- Löse dies ohne die MIN()-Funktion
+Löse dies mit Hilfe der MIN()-Funktion
 
-	SELECT MIN("year") FROM baby_names                               # -> 1880
+	SELECT MIN("year") FROM baby_names # -> 1880
+
+Löse dies ohne die MIN()-Funktion
+
 	SELECT DISTINCT("year") FROM baby_names ORDER BY "year" LIMIT 5  # -> 1880
 
 ### (3) Wie viele unterschiedliche Vornamen gibt es, die aus exakt 5 Buchstaben bestehen?
-- Löse dies mit einem WHERE und der LENGTH()-Funktion
-- Löse dies mit einem WHERE und einem LIKE (hier gab es einen speziellen Platzhalter)
+Löse dies mit einem WHERE und der LENGTH()-Funktion
 
 	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE LENGTH("name") = 5  # -> 1590
+
+Löse dies mit einem WHERE und einem LIKE (hier gab es einen speziellen Platzhalter)
+
 	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE "name" LIKE '_____' # -> 1590
 
 ### (4) Wie viele Babys sind für das Jahr 2000 insgesamt in unserer Datenbasis? Berechne hier die Summe aller Einträge!
@@ -256,34 +263,35 @@ Use 'AS' to name columns.
 
 	SELECT DISTINCT("name") FROM baby_names ORDER BY "name" OFFSET 10 LIMIT 1 # -> Aarna
 
-# (4) Daten verwalten
+# (4) MANAGE DATA
 ## INSERT INTO
-Neue Daten permanent in eine bestehende Datenbank/ Datensatz einspeisen.  
+Put new data permanently into existing data.  
 
 	INSERT INTO TABLE (col1, col2)
 		VALUES('LOL', 1312)
 
 ## UPDATE
-Werte nachträglich anpassen - einzelne Werte/ ganze Reihen & Spalten.  
-- ALLE Werte der col1 auf 'lol' & col auf 1234 setzen 
-- Einschränkung über WHERE möglich
-- Falls man nur eine einzige Zeile anpassen will, am besten über row-ID
+Update data values - einzelne values or whole columns & rows Reihen & Spalten.  
+
+Set ALL values of col1 to 'lol' & col to 1234  
 
 	UPDATE TABLE
 		SET col1 = 'lol', col2 = 1234
+
+Select specific rows/ values with WHERE - in case you want to replace a single row only use the row-ID
 
 	UPDATE TABLE
 		SET col1 = 'lol', col2 = 1234
 		WHERE col1 = 'lohl'
 
-- Folgendes hat den gleichen Effekt ('-' wird durch '--' ersetzt), wobei UPDATE permanent ist!
+Both commands have the same effect ('-' is replaced by '--') - UPDATE is permanently
 
 	SELECT REPLACE(title, '-', '--') FROM categories
 
 	UPDATE categories SET title = REPLACE(title, '-', '--')
 
 ## DELETE 
-Den ganzen Datensatz löschen/ bzw. nur die Reihe(n) mit dem Wert 5 in der Spalte 'id'
+Delete a whole dateset/ single rows e.g. with the value '5' in the column 'id'
 
 	DELETE FROM TABLE
 
@@ -291,9 +299,8 @@ Den ganzen Datensatz löschen/ bzw. nur die Reihe(n) mit dem Wert 5 in der Spalt
 
 ## 4. Exercise - 'locations'
 ### (1) Leider hat sich in diesen Daten ein kleiner Fehler eingeschlichen. Die Adresse der „Buchhandlung DOM“ ist das Domkloster 4 und nicht das Domkloster 1. Aktualisiere daher die Daten mit einem UPDATE-Befehl.
-
-- Hinweis 1: Beachte hierbei, dass die Stadt und die Postleitzahl erhalten bleibt
-- Hinweis 2: Genau aus diesem Grund speichert man die Adresse oft aufgeteilt in verschiedenen Feldern in der Datenbank, d.h. 1 Feld für die Straße, eins für die Stadt, eins für die Postleitzahl,…
+Hinweis 1: Beachte hierbei, dass die Stadt und die Postleitzahl erhalten bleibt.  
+Hinweis 2: Genau aus diesem Grund speichert man die Adresse oft aufgeteilt in verschiedenen Feldern in der Datenbank, d.h. 1 Feld für die Straße, eins für die Stadt, eins für die Postleitzahl,…
 
 	UPDATE locations SET address = 'Domkloster 4, 50667 Köln' WHERE address = 'Domkloster 1, 50667 Köln' 
 
@@ -302,14 +309,12 @@ Den ganzen Datensatz löschen/ bzw. nur die Reihe(n) mit dem Wert 5 in der Spalt
 	DELETE FROM locations WHERE id = 2
 
 ### (3) Eine neue Buchhandlung soll nach nur 20 Jahren Bauzeit noch diesen Monat in Berlin eröffnet werden. Füge daher folgenden Eintrag in die Datenbank ein:
-
-- Titel: Buchhandlung Flughafen BER
-- Adresse: Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland
+Titel: Buchhandlung Flughafen BER & Adresse: Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland
 
 	INSERT INTO locations ("title", "address") VALUES ('Buchhandlung Flughafen BER', 'Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland')
 
-# (5) Tabellen verwalten
+# (5) Manage tables
 ## CREATE
-Erstellen eines Datensatzes
+Create a new dataset
 
 
