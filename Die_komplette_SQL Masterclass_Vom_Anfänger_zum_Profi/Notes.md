@@ -81,31 +81,31 @@ Get the amount of individual names from TABLE
 	FROM TABLE
 
 ## 1. Exercise - 'baby_names'
-#### (1) Wie viele Einträge gibt es insgesamt in der Tabelle baby_names?
+### (1) Wie viele Einträge gibt es insgesamt in der Tabelle baby_names?
 
 	SELECT COUNT(*) FROM baby_names
 
-#### (2) Wie viele männliche Personen (gender = M) wurden im Jahr 2010 geboren, die „Alex“ heißen?
+### (2)  Wie viele männliche Personen (gender = M) wurden im Jahr 2010 geboren, die „Alex“ heißen?
 
-	SELECT COUNT(*) FROM baby_names 
-	WHERE ("name" = 'Alex' AND "gender" = 'M' AND "year" = 2010)
+	SELECT COUNT(*) FROM baby_names WHERE 
+		("name" = 'Alex' AND "gender" = 'M' AND "year" = 2010)
 
-#### (3) Wie viele unterschiedliche Namen gibt es in unserer Tabelle, wenn das Geschlecht egal ist *(d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählt als der gleiche Name)*
+### (3) Wie viele unterschiedliche Namen gibt es in unserer Tabelle… wenn:
+#### (3-1) Das Geschlecht egal ist (d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählt als der gleiche Name)
 
 	SELECT COUNT(DISTINCT("name")) FROM baby_names 
 
-#### (4) Wie viele unterschiedliche Namen gibt es in unserer Tabelle, wenn das Geschlecht nicht egal ist *(d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählen als 2 unterschiedliche Namen)*
-	
+#### (3-2) Das Geschlecht nicht egal ist (d.h. "Alex" für das Geschlecht M und "Alex" für das Geschlecht "F" zählen als 2 unterschiedliche Namen)
+
 	SELECT COUNT(DISTINCT("name", "gender")) FROM baby_names 
 
-#### (5) Welcher Baby-Name wurde in einem bestimmten Jahr exakt 19250 mal vergeben?
+### (4) Welcher Baby-Name wurde in einem bestimmten Jahr exakt 19250 mal vergeben?
 
-	SELECT * FROM baby_names 
-	WHERE count = 19250
+	SELECT * FROM baby_names WHERE count = 19250
 
-#### (6) Gibt es das Geschlecht „divers“ in unserer Tabelle? 
+### (5) Gibt es das Geschlecht „divers“ in unserer Tabelle? Kannst du das mit den dir bisher bekannten Befehlen herausfinden?
 
-	SELECT DISTINCT("gender") FROM baby_names 
+	SELECT DISTINCT("gender") FROM baby_names  
 
 ## LIKE
 Effective fullltext search - e.g. all E-Mails that contain '@gmail'.  
@@ -155,26 +155,26 @@ Instead of `SELECT * WHERE (name = 'Julia' OR name = 'Paul`)
 	WHERE name IN ('Julia', 'Anna')
 
 ## 2. Exercise - 'baby_names'
-#### (1) Wie viele unterschiedliche Vornamen gibt es, die mit „Alex“ anfangen, „Alex“ eingeschlossen? Hierbei spielt das Geschlecht keine Rolle.
+### (1) Wie viele unterschiedliche Vornamen gibt es, die mit „Alex“ anfangen, „Alex“ eingeschlossen? Hierbei spielt das Geschlecht keine Rolle.
 
-	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE "name" LIKE 'Alex%' 
+	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE "name" LIKE 'Alex%' # -> 20 
 
-#### (2) Wie viele unterschiedliche Vornamen gibt es, in denen im Vornamen ein „m“ enthalten ist? Das „m“ darf auch an erster Stelle stehen. 
+### (2) Wie viele unterschiedliche Vornamen gibt es, in denen im Vornamen ein „m“ enthalten ist? Das „m“ darf auch an erster Stelle stehen.  
 
-	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE "name" LIKE '%m%' OR "name" LIKE 'M%' 	
+	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE "name" LIKE '%m%' OR "name" LIKE 'M%' # -> 1183	
 
-#### (3) Wie viele Zeilen gibt es in der Tabelle, bei denen das Jahr im 20. Jahrhundert (1900 bis einschließlich 1999) ist?  
--> einmal mit BETWEEN einmal ohne
+### (3) Wie viele Zeilen gibt es in der Tabelle, bei denen das Jahr im 20. Jahrhundert (1900 bis einschließlich 1999) ist? 
+Einmal mit BETWEEN einmal ohne
 
-	SELECT COUNT("year") FROM baby_names WHERE "year" BETWEEN 1900 AND 1999     
+	SELECT COUNT("year") FROM baby_names WHERE "year" BETWEEN 1900 AND 1999      # -> 100
+	SELECT COUNT("year") FROM baby_names WHERE "year" >= 1900 AND "year" <= 1999 # -> 100
 
-	SELECT COUNT("year") FROM baby_names WHERE "year" >= 1900 AND "year" <= 1999 
+### (4) Wie viele Zeilen gibt es in der Tabelle, bei denen das Jahr im 20. Jahrhundert (1900 bis einschließlich 1999) ist, und durch 10 Teilbar ist?
 
-#### (4) Wie viele Zeilen gibt es in der Tabelle, bei denen das Jahr im 20. Jahrhundert (1900 bis einschließlich 1999) ist, und durch 10 Teilbar ist?  
--> Löse diese Aufgabe mit vielen ORs  
--> Löse diese Aufgabe mit einem WHERE IN()  
--> Löse die Aufgabe mit einem LIKE  
--> Löse diese Aufgabe mit einem Modulo
+	- Löse diese Aufgabe mit vielen ORs
+	- Löse diese Aufgabe mit einem WHERE IN()
+	- Löse die Aufgabe mit einem LIKE
+	- Löse diese Aufgabe mit einem Modulo
 
 	SELECT COUNT("year") FROM baby_names WHERE 
 		"year" = 1900 OR "year" = 1910 OR "year" = 1920 OR "year" = 1930 OR
@@ -222,6 +222,7 @@ Useful bulit-in funtions
 - **LENGTH(char col)** Amount of chars
 - **SUBSTR(char col, POS, LEN)** Get substring, from POS to LEN chars
 - **CONCAT(char col, char col)** Paste two char-cols
+- **REPLACE(col1, char1, char2)** Replace all char1 elements w/ char2 in col1
 
 Can also be combined + take care that they return the same amount of rows.  
 Use 'AS' to name columns.
@@ -231,7 +232,88 @@ Use 'AS' to name columns.
 	SELECT AVG(MIN(age), MAX(age)) AS LOL FROM TABLE
 
 ## 3. Exercise - 'baby_names'
+### (1) Welcher Vorname kam insgesamt (d.h. für ein beliebiges Geschlecht in einem beliebigen Jahr) am häufigsten vor?
 
+	SELECT * FROM baby_names ORDER BY "count" DESC LIMIT 3 # -> Linda
 
+### (2) Welches Jahr ist das erste Jahr in unserer Datenbasis?
+
+	- Löse dies mit Hilfe der MIN()-Funktion
+	- Löse dies ohne die MIN()-Funktion
+
+	SELECT MIN("year") FROM baby_names                               # -> 1880
+	SELECT DISTINCT("year") FROM baby_names ORDER BY "year" LIMIT 5  # -> 1880
+
+### (3) Wie viele unterschiedliche Vornamen gibt es, die aus exakt 5 Buchstaben bestehen?
+
+	- Löse dies mit einem WHERE und der LENGTH()-Funktion
+	- Löse dies mit einem WHERE und einem LIKE (hier gab es einen speziellen Platzhalter)
+
+	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE LENGTH("name") = 5  # -> 1590
+	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE "name" LIKE '_____' # -> 1590
+
+### (4) Wie viele Babys sind für das Jahr 2000 insgesamt in unserer Datenbasis? Berechne hier die Summe aller Einträge!
+
+	SELECT SUM(count) FROM baby_names WHERE year = 2020 # -> 3.320.671
+
+### (5) Wenn wir alle unterschiedlichen Vornamen betrachten (Geschlecht ist egal), und aufsteigend alphabetisch sortieren - Welcher Vorname steht auf der 2. Seite ganz oben, wenn die erste Seite aus 10 Einträgen besteht?
+
+	SELECT DISTINCT("name") FROM baby_names ORDER BY "name" OFFSET 10 LIMIT 1 # -> Aarna
+
+# (4) Daten verwalten
+## INSERT INTO
+Neue Daten permanent in eine bestehende Datenbank/ Datensatz einspeisen.  
+
+	INSERT INTO TABLE (col1, col2)
+		VALUES('LOL', 1312)
+
+## UPDATE
+Werte nachträglich anpassen - einzelne Werte/ ganze Reihen & Spalten.  
+
+	- ALLE Werte der col1 auf 'lol' & col auf 1234 setzen 
+	- Einschränkung über WHERE möglich
+	- Falls man nur eine einzige Zeile anpassen will, am besten über row-ID
+
+	UPDATE TABLE
+		SET col1 = 'lol', col2 = 1234
+
+	UPDATE TABLE
+		SET col1 = 'lol', col2 = 1234
+		WHERE col1 = 'lohl'
+
+	- Folgendes hat den gleichen Effekt ('-' wird durch '_' ersetzt), wobei UPDATE permanent ist!
+
+	SELECT REPLACE(title, '-', '_') FROM categories
+
+	UPDATE categories SET title = REPLACE(title, '-', '_')
+
+## DELETE 
+Den ganzen Datensatz löschen/ bzw. nur die Reihe(n) mit dem Wert 5 in der Spalte 'id'
+
+	DELETE FROM TABLE
+
+	DELETE FROM TABLE WHERE id = 5
+
+## 4. Exercise - 'locations'
+### (1) Leider hat sich in diesen Daten ein kleiner Fehler eingeschlichen. Die Adresse der „Buchhandlung DOM“ ist das Domkloster 4 und nicht das Domkloster 1. Aktualisiere daher die Daten mit einem UPDATE-Befehl.
+
+	- Hinweis 1: Beachte hierbei, dass die Stadt und die Postleitzahl erhalten bleibt
+	- Hinweis 2: Genau aus diesem Grund speichert man die Adresse oft aufgeteilt in verschiedenen Feldern in der Datenbank, d.h. 1 Feld für die Straße, eins für die Stadt, eins für die Postleitzahl,…
+
+	UPDATE locations SET address = 'Domkloster 4, 50667 Köln' WHERE address = 'Domkloster 1, 50667 Köln' 
+
+### (2) Die Buchhandlung Alexanderplatz musste Anfang dieses Monats geschlossen werde. Entferne sie daher aus der Datenbank!
+	DELETE FROM locations WHERE id = 2
+
+### (3) Eine neue Buchhandlung soll nach nur 20 Jahren Bauzeit noch diesen Monat in Berlin eröffnet werden. Füge daher folgenden Eintrag in die Datenbank ein:
+
+	- Titel: Buchhandlung Flughafen BER
+	- Adresse: Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland
+
+	INSERT INTO locations ("title", "address") VALUES ('Buchhandlung Flughafen BER', 'Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland')
+
+# (5) Tabellen verwalten
+## CREATE
+Erstellen eines Datensatzes
 
 
