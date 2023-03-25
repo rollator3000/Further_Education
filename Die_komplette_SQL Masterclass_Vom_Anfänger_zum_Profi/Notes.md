@@ -24,11 +24,11 @@ Select the columns "id", "creator", "title" & "downloads" from the table "books"
 # (2) Installation of PostgreSQL
 As MySQL doesn't work on MacOS, I've only set-up PostgreSQL. <br/> 
 
-	- Download of a databank *(s. 'data/')*
-	- Configuration of PostgreSQL
-		- PGAdmin4 
-		- Servers
-		- Creation of new data-base
+- Download of a databank *(s. 'data/')*
+- Configuration of PostgreSQL
+	- PGAdmin4 
+	- Servers
+	- Creation of new data-base
 
 # (3) Databank Queries
 ## SELECT
@@ -171,10 +171,10 @@ Einmal mit BETWEEN einmal ohne
 
 ### (4) Wie viele Zeilen gibt es in der Tabelle, bei denen das Jahr im 20. Jahrhundert (1900 bis einschließlich 1999) ist, und durch 10 Teilbar ist?
 
-	- Löse diese Aufgabe mit vielen ORs
-	- Löse diese Aufgabe mit einem WHERE IN()
-	- Löse die Aufgabe mit einem LIKE
-	- Löse diese Aufgabe mit einem Modulo
+- Löse diese Aufgabe mit vielen ORs
+- Löse diese Aufgabe mit einem WHERE IN()
+- Löse die Aufgabe mit einem LIKE
+- Löse diese Aufgabe mit einem Modulo
 
 	SELECT COUNT("year") FROM baby_names WHERE 
 		"year" = 1900 OR "year" = 1910 OR "year" = 1920 OR "year" = 1930 OR
@@ -190,7 +190,6 @@ Einmal mit BETWEEN einmal ohne
 		"year"%10 = 0 AND year BETWEEN 1900 AND 1999
 
 ## ORDER BY 
-
 - ORDER BY goes to end of each query
 - ORDER BY ASC is ascending & analog w/ DESC
 
@@ -200,7 +199,6 @@ Can be applied to mutliple variables
 	ORDER BY name DESC, age ASC
 
 ## LIMIT
-
 - LIMIT can be used to limit the amount of shown rows
 - OFFSET is used to skip the first X rows
 
@@ -237,17 +235,15 @@ Use 'AS' to name columns.
 	SELECT * FROM baby_names ORDER BY "count" DESC LIMIT 3 # -> Linda
 
 ### (2) Welches Jahr ist das erste Jahr in unserer Datenbasis?
-
-	- Löse dies mit Hilfe der MIN()-Funktion
-	- Löse dies ohne die MIN()-Funktion
+- Löse dies mit Hilfe der MIN()-Funktion
+- Löse dies ohne die MIN()-Funktion
 
 	SELECT MIN("year") FROM baby_names                               # -> 1880
 	SELECT DISTINCT("year") FROM baby_names ORDER BY "year" LIMIT 5  # -> 1880
 
 ### (3) Wie viele unterschiedliche Vornamen gibt es, die aus exakt 5 Buchstaben bestehen?
-
-	- Löse dies mit einem WHERE und der LENGTH()-Funktion
-	- Löse dies mit einem WHERE und einem LIKE (hier gab es einen speziellen Platzhalter)
+- Löse dies mit einem WHERE und der LENGTH()-Funktion
+- Löse dies mit einem WHERE und einem LIKE (hier gab es einen speziellen Platzhalter)
 
 	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE LENGTH("name") = 5  # -> 1590
 	SELECT COUNT(DISTINCT("name")) FROM baby_names WHERE "name" LIKE '_____' # -> 1590
@@ -269,10 +265,9 @@ Neue Daten permanent in eine bestehende Datenbank/ Datensatz einspeisen.
 
 ## UPDATE
 Werte nachträglich anpassen - einzelne Werte/ ganze Reihen & Spalten.  
-
-	- ALLE Werte der col1 auf 'lol' & col auf 1234 setzen 
-	- Einschränkung über WHERE möglich
-	- Falls man nur eine einzige Zeile anpassen will, am besten über row-ID
+- ALLE Werte der col1 auf 'lol' & col auf 1234 setzen 
+- Einschränkung über WHERE möglich
+- Falls man nur eine einzige Zeile anpassen will, am besten über row-ID
 
 	UPDATE TABLE
 		SET col1 = 'lol', col2 = 1234
@@ -281,11 +276,11 @@ Werte nachträglich anpassen - einzelne Werte/ ganze Reihen & Spalten.
 		SET col1 = 'lol', col2 = 1234
 		WHERE col1 = 'lohl'
 
-	- Folgendes hat den gleichen Effekt ('-' wird durch '_' ersetzt), wobei UPDATE permanent ist!
+- Folgendes hat den gleichen Effekt ('-' wird durch '--' ersetzt), wobei UPDATE permanent ist!
 
-	SELECT REPLACE(title, '-', '_') FROM categories
+	SELECT REPLACE(title, '-', '--') FROM categories
 
-	UPDATE categories SET title = REPLACE(title, '-', '_')
+	UPDATE categories SET title = REPLACE(title, '-', '--')
 
 ## DELETE 
 Den ganzen Datensatz löschen/ bzw. nur die Reihe(n) mit dem Wert 5 in der Spalte 'id'
@@ -297,18 +292,19 @@ Den ganzen Datensatz löschen/ bzw. nur die Reihe(n) mit dem Wert 5 in der Spalt
 ## 4. Exercise - 'locations'
 ### (1) Leider hat sich in diesen Daten ein kleiner Fehler eingeschlichen. Die Adresse der „Buchhandlung DOM“ ist das Domkloster 4 und nicht das Domkloster 1. Aktualisiere daher die Daten mit einem UPDATE-Befehl.
 
-	- Hinweis 1: Beachte hierbei, dass die Stadt und die Postleitzahl erhalten bleibt
-	- Hinweis 2: Genau aus diesem Grund speichert man die Adresse oft aufgeteilt in verschiedenen Feldern in der Datenbank, d.h. 1 Feld für die Straße, eins für die Stadt, eins für die Postleitzahl,…
+- Hinweis 1: Beachte hierbei, dass die Stadt und die Postleitzahl erhalten bleibt
+- Hinweis 2: Genau aus diesem Grund speichert man die Adresse oft aufgeteilt in verschiedenen Feldern in der Datenbank, d.h. 1 Feld für die Straße, eins für die Stadt, eins für die Postleitzahl,…
 
 	UPDATE locations SET address = 'Domkloster 4, 50667 Köln' WHERE address = 'Domkloster 1, 50667 Köln' 
 
 ### (2) Die Buchhandlung Alexanderplatz musste Anfang dieses Monats geschlossen werde. Entferne sie daher aus der Datenbank!
+
 	DELETE FROM locations WHERE id = 2
 
 ### (3) Eine neue Buchhandlung soll nach nur 20 Jahren Bauzeit noch diesen Monat in Berlin eröffnet werden. Füge daher folgenden Eintrag in die Datenbank ein:
 
-	- Titel: Buchhandlung Flughafen BER
-	- Adresse: Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland
+- Titel: Buchhandlung Flughafen BER
+- Adresse: Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland
 
 	INSERT INTO locations ("title", "address") VALUES ('Buchhandlung Flughafen BER', 'Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland')
 
