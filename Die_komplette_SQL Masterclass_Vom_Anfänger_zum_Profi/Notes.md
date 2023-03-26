@@ -265,10 +265,11 @@ Löse dies mit einem WHERE und einem LIKE (hier gab es einen speziellen Platzhal
 
 # (4) MANAGE DATA
 ## INSERT INTO
-Put new data permanently into existing data.  
+Put new data permanently into existing data - if 'TABLE' had an 3rd column the added row would contain NULL.  
 
 	INSERT INTO TABLE (col1, col2)
 		VALUES('LOL', 1312)
+
 
 ## UPDATE
 Update data values - einzelne values or whole columns & rows Reihen & Spalten.  
@@ -315,6 +316,86 @@ Titel: Buchhandlung Flughafen BER & Adresse: Melli-Beese-Ring 1, 12529 Schönefe
 
 # (5) Manage tables
 ## CREATE
-Create a new dataset
+Create a new dataset - data-type needs to be defined.  
+
+### DATATYPES:
+#### TEXT
+- VARCHAR: Text with variable & max amount of chars *(performant up to 1.000 chars)*  
+- TEXT: Text of defined length *(max. of 100gb)*
+
+#### NUMBERS
+1byte = 8bit --> 2^8 possible numbers.  
+
+- SMALLINT: 2^16 *(2byte)* 
+- IMNTEGER: 2^32 *(4byte)*
+- BIGINT: 2^64 *(8byte)*
+- DECIMAL(num1, num2): num1 = digits before the comma // num2 = digits after the comma
+	- Wird nicht immer gerundet wie Zweifel
+- REAL: Kommazahl *(4byte)*
+- DOUBLE: Kommazahl *(8byte)* - im Zweifel genauer <br/>
+
+
+Create a table 'doku' with the colums Name, Age, & Earnings 
+
+	CREATE TABLE newsletter (
+			Name VARCHAR(100)     # Max of 100 chars allowed
+		    Age SMALLINT,
+		    Earnings DOUBLE
+		)
+
+## MANAGE COLUMNS
+Remove a table
+
+	DROP TABLE table_name
+</br>
+
+Remove a column
+
+	ALTER TABLE table_name DROP COLUMN col_name
+</br>
+
+Add a column
+
+	ALTER TABLE table_name ADD COLUMN col_name datatype  
+	ALTER TABLE stores ADD COLUMN city VARCHAR(127)
+	ALTER TABLE stores ADD COLUMN rent DOUBLE(5, 2)
+</br>
+
+Modify a column & change its datatype
+
+	ALTER TABLE table_name MODIFY COLUMN col_name datatype  
+	ALTER TABLE stores ADD COLUMN city VARCHAR(129)
+<br/>
+
+Fill the columns of a table *(also s. Chapter 4 - 'INSERT INTO')*
+
+	INSERT INTO stores (city, rent)
+		VALUES ("Munich", 10000.00)
+
+## NULL
+- Non existing value - comperable to NA, NaN, ... - different from '' / 0 ;)  
+- Can also be forbidden in certain columns with `NOT NULL` behind the data-type argument *(NULL allowed is the standard)*  
+- Values can be found with `WHERE col_name IS NULL` // `WHERE col_name IS NOT NULL`  
+	- When fillling values into a table, we MUST specify values for these columns *(we must not leave them out, when calling `INSERT INTO()` ;))*!
+- Setting a column/ values to NULL possible with SET: `.. SET num_order = NULL WHERE ID = 234`
+
+Example:
+
+	CREATE TABLE table_name (
+		num_orders INTEGER NOT NULL
+		swag_level INTEGER NULL
+		)
+
+`INSERT INTO table_name(swag_level) VALUES(1000)` would lead to an error then!  
+`INSERT INTO table_name(num_orders) VALUES(12)` works & sets 'swag_level' to NULL!  
+
+## STANDARD VALUES
+
+
+
+
+
+
+
 
 
