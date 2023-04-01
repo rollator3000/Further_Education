@@ -111,12 +111,13 @@ Titel: Buchhandlung Flughafen BER & Adresse: Melli-Beese-Ring 1, 12529 Schönefe
 	INSERT INTO locations ("title", "address") VALUES ('Buchhandlung Flughafen BER', 'Melli-Beese-Ring 1, 12529 Schönefeld, Deutschland')
 
 # V79: 5. Exercise Tabellen verwalten
-# (1) Erstelle eine Tabelle („newsletter“), in der wir die Registrierungen für einen Newsletter abspeichern können.
-#     Wir benötigen folgende Spalten:
-#		ID
-#		E-Mail-Adresse vom Kunden (zwingend benötigt)
-#		Name vom Kunden (optional)
-#		Alter in Jahren (optional)
+### (1) Erstelle eine Tabelle („newsletter“), in der wir die Registrierungen für einen Newsletter abspeichern können.
+Wir benötigen folgende Spalten:
+- ID
+- E-Mail-Adresse vom Kunden (zwingend benötigt)
+- Name vom Kunden (optional)
+- Alter in Jahren (optional)
+
 		CREATE TABLE newsletter (
 		    ID SERIAL PRIMARY KEY,
 		    EMail VARCHAR(1000) NOT NULL,
@@ -124,10 +125,10 @@ Titel: Buchhandlung Flughafen BER & Adresse: Melli-Beese-Ring 1, 12529 Schönefe
 		    Alter INTEGER
 		)
 
+### (2) Tabellen abändern
+Füge anschließend folgende Spalte zu der Tabelle noch hinzu: 
+- Datenschutzvereinbarung akzeptiert: Datentyp: BOOLEAN Standardmäßig ausgefüllt mit FALSE
 
-# (2) Tabellen abändern
-#     Füge anschließend folgende Spalte zu der Tabelle noch hinzu:
-#		Datenschutzvereinbarung akzeptiert: Datentyp: BOOLEAN Standardmäßig ausgefüllt mit FALSE
 		ALTER TABLE newsletter 
 			ADD COLUMN Datenschutz BOOLEAN NOT NULL DEFAULT FALSE
 

@@ -390,9 +390,37 @@ Example:
 `INSERT INTO table_name(num_orders) VALUES(12)` works & sets 'swag_level' to NULL!  
 
 ## STANDARD VALUES
+- If we have standard values these are set automatically *(instead of NULL)* with `INSERT`  
+
+Example:
+
+	CREATE TABLE table_name (
+		num_books INT NOT NULL DEFAULT 0
+		)
 
 
+	ALTER TABLE table_name (
+		ADD COLUMN num_books INT NOT NULL DEFAULT 0
+		)
 
+--> In these cases: If we add a row & don't define 'num_books' its added with the value 0
+
+## ID / Primary-Key
+- Column to identify rows cleary - no duplicated values possible  
+- 'auto-increment' adds a new ID automatically for all new added rows *(doesn't need to be defined in `INSERT`)*
+- has key-word 'SERIAL'
+
+Example:
+
+	CREATE TABLE table_name (
+		id SERIAL PRIMARY KEY
+		title VARCHAR(100) NOT NULL
+	)
+
+	INSERT INTO table_name (title)
+		VALUES ("LOL")
+
+--> This adds a new row with 'LOL' as title & automatically adds the primary key 'ID'
 
 
 
