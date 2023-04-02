@@ -423,6 +423,64 @@ Example:
 --> This adds a new row with 'LOL' as title & automatically adds the primary key 'ID'
 
 
+# (6) Complex Queries - SubSelect
+## SUBSELECT
+- Query in a query aka a subquery
+- Can be used for complex queries with multiple conditions
+
+Example:
+
+Customers table:
+<br/>
+| ID | name | surname |
+|----|------|---------|
+| 1  | Max  | Müller  |
+| 2  | Paul | Schmidt |
+| 3  | Pia  | Hut     |
+| ...| ...  | ...     | 
+<br/> 
+
+Orders table:
+<br/>
+| ID   | amount | date   | customer_id |
+|------|--------|--------|-------------|
+| 123  | 12,23  | 1.1.22 | 1           |
+| 1234 | 19,42  | 1.1.22 | 5           |
+| 1234 | 123,12 | 2.1.22 | 2           |
+| ...  | ...    |        | ...         |
+<br/>
+
+Add columns name & surname from the table Customers to the table Orders *(comperable to a 'join')* & map the names per ID *(Customers)* & customer_id *(Orders)*
+
+	SELECT *,
+		(SELECT name, surname FROM Customers
+			WHERE Customers.ID = Orders.customer_id) AS name, name2
+	FROM Orders
+
+
+| ID   | amount | date   | customer_id | name | surname |
+|------|--------|--------|-------------|------|---------|
+| 123  | 12,23  | 1.1.22 | 1           | Max  | Müller  |
+| 1234 | 19,42  | 1.1.22 | 5           | ABCD | EFGHDJH |
+| 1234 | 123,12 | 2.1.22 | 2           | Paul | Schmidt |
+| ...  | ...    |        | ...         | ...  | ...     |
+
+### Renaming of tables
+Instead of calling all columns from tables by 'tablename.column' we can abbreviate tablenames and make it more compact - this is especially important for complex queries!
+
+Example:
+
+Get the all IDs of 'Orders' and their corresponding amount of orders ()
+
+	SELECT DISTINCT(O.customer_id),
+		(SELECT COUNT(*) FROM Orders AS O2
+			WHERE 02.customer_id = 0.customer_id)
+	FROM Orders AS O
+
+### SELECT COLUMNS
+
+
+
 
 
 
