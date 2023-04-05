@@ -465,7 +465,7 @@ Add columns name & surname from the table Customers to the table Orders *(comper
 | 1234 | 123,12 | 2.1.22 | 2           | Paul | Schmidt |
 | ...  | ...    |        | ...         | ...  | ...     |
 
-### Renaming of tables
+## Renaming of tables
 Instead of calling all columns from tables by 'tablename.column' we can abbreviate tablenames and make it more compact - this is especially important for complex queries!
 
 Example: Get the all IDs of 'Orders' and their corresponding amount of orders
@@ -475,7 +475,7 @@ Example: Get the all IDs of 'Orders' and their corresponding amount of orders
 			WHERE 02.customer_id = 0.customer_id)
 	FROM Orders AS O
 
-### NAME SUBSELECT COLUMNS (& use them to filter with WHERE)
+## NAME SUBSELECT COLUMNS (& use them to filter with WHERE)
 Added Columns can be renamed - if we need multiple cols pasted in a single col: `SELECT (id, time) FROM orders` // `SELECT CONCAT(id, time) FROM orders`
 
 	SELECT O.timestamp,
@@ -484,7 +484,7 @@ Added Columns can be renamed - if we need multiple cols pasted in a single col: 
 	FROM Orders AS O
 	WHERE COLNAME_XY LIKE A%
 
-### SUBSELECTS over multiple rows
+## SUBSELECTS over multiple rows
 Einer ID können mehrere Zeitstemple zugeordnet werden, sodass verschiedene IDs eine verschiedene Anzahl an Zeilen bekommen würde.  
 Führt zum Fehler, wenn `ORDER BY timestamp DESC LIMIT 1` fehlt!  
 
@@ -495,7 +495,7 @@ Führt zum Fehler, wenn `ORDER BY timestamp DESC LIMIT 1` fehlt!
 	FROM Customers
 
 
-# 6. Exercise SUBSELECTS - Versuche, alle Aufgaben jeweils mit exakt einer Query zu lösen!
+## 6. Exercise SUBSELECTS - Versuche, alle Aufgaben jeweils mit exakt einer Query zu lösen!
 Betrachte die Tabelle books. In der Spalte „language“ ist die jeweilige Sprache von einem jeden Buch notiert.
 
 ### (1) Wie viel % der Bücher sind in deutscher Sprache? Versuche dies mit einer Query zu lösen!
@@ -535,6 +535,5 @@ Hinweis: Das würde mit einem GROUP BY sehr viel effizienter gehen – das haben
 		            WHERE books_new.creator = books_old.creator) AS amount_books
 		FROM books AS books_old ORDER BY amount_books DESC
 
-
-
+# (7) JOINS
 
