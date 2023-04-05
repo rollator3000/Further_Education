@@ -113,10 +113,10 @@ Titel: Buchhandlung Flughafen BER & Adresse: Melli-Beese-Ring 1, 12529 Schönefe
 # V79: 5. Exercise Tabellen verwalten
 ### (1) Erstelle eine Tabelle („newsletter“), in der wir die Registrierungen für einen Newsletter abspeichern können.
 Wir benötigen folgende Spalten:
-- ID
-- E-Mail-Adresse vom Kunden (zwingend benötigt)
-- Name vom Kunden (optional)
-- Alter in Jahren (optional)
+ID  
+E-Mail-Adresse vom Kunden (zwingend benötigt)  
+Name vom Kunden (optional)  
+Alter in Jahren (optional)  
 
 		CREATE TABLE newsletter (
 		    ID SERIAL PRIMARY KEY,
@@ -133,39 +133,40 @@ Füge anschließend folgende Spalte zu der Tabelle noch hinzu:
 			ADD COLUMN Datenschutz BOOLEAN NOT NULL DEFAULT FALSE
 
 # V97 6. Exercise SUBSELECTS - Versuche, alle Aufgaben jeweils mit exakt einer Query zu lösen!
-#        Betrachte die Tabelle books. In der Spalte „language“ ist die jeweilige Sprache von einem jeden Buch notiert.
-# (1) Wie viel % der Bücher sind in deutscher Sprache? Versuche dies mit einer Query zu lösen!
-#     > Tipp 1: Mit einem SELECT (SUBQUERY), (SUBQUERY) kannst du 2 komplett unterschiedliche Subqueries an die Datenbank schicken, sofern sie 
-#               jeweils nur einen Wert aggregieren (z.B. die Anzahl ermitteln,…). Es wird hier nicht zwingend die Angabe einer Tabelle benötigt!
-#     > Tipp 2: Auch kannst du die Ergebnisse direkt miteinander verrechnen: SELECT (SUBQUERY) / (SUBQUERY). Wichtig: Funktioniert so nur in
-#               MySQL, unter PostgreSQL gibt es noch was zu beachten – siehe Musterlösung.
-		# --> How to divide the two relevant columns..?!
-		SELECT
-    		(SELECT COUNT(*) from books WHERE language = 'de')::float /  / # Amount of german books
-    		(SELECT COUNT(*) from books)::float /                          # Amount of all books
+Betrachte die Tabelle books. In der Spalte „language“ ist die jeweilige Sprache von einem jeden Buch notiert.
+
+### (1) Wie viel % der Bücher sind in deutscher Sprache? Versuche dies mit einer Query zu lösen!
+Tipp 1: Mit einem SELECT (SUBQUERY), (SUBQUERY) kannst du 2 komplett unterschiedliche Subqueries an die Datenbank schicken, sofern sie jeweils nur einen Wert aggregieren (z.B. die Anzahl ermitteln,…). Es wird hier nicht zwingend die Angabe einer Tabelle benötigt! <br/>
+Tipp 2: Auch kannst du die Ergebnisse direkt miteinander verrechnen: SELECT (SUBQUERY) / (SUBQUERY). Wichtig: Funktioniert so nur in MySQL, unter PostgreSQL gibt es noch was zu beachten – siehe Musterlösung.
+
+	SELECT
+		(SELECT COUNT(*) from books WHERE language = 'de')::float /  / # Amount of german books
+		(SELECT COUNT(*) from books)::float /                          # Amount of all books
 
 
-# (2) Betrachte die Tabelle books. Jedes Buch hat ein Thema / eine Kategorie, die entsprechende Information hierzu findet sich in der Tabelle 
-#     books_subjects. Erstelle eine Auflistung aller Bücher inkl. dem jeweiligen Thema!
-		SELECT title, 
-		    (SELECT title FROM books_subjects 
-		        	WHERE books.subject_id = books_subjects.id) AS Category
-		FROM books
+### (2) Erstelle eine Auflistung aller Bücher inkl. dem jeweiligen Thema!
+Betrachte die Tabelle books. Jedes Buch hat ein Thema / eine Kategorie, die entsprechende Information hierzu findet sich in der Tabelle books_subjects. 
 
-# (3) Betrachte die Tabelle books_subjects, ein Thema kann von mehreren Büchern verwendet werden. Wie oft kommt das beliebteste Thema vor?
-#     Bzw. anders ausgedrückt: Zu welchem Thema gibt es am meisten Bücher, und wie viele Bücher sind das?
-		SELECT title,
-		    (SELECT COUNT(*) FROM books 
-		            WHERE books.subject_id = books_subjects.id) AS topic_freq
-		FROM books_subjects ORDER BY topic_freq DESC
+	SELECT title, 
+	    (SELECT title FROM books_subjects 
+	        	WHERE books.subject_id = books_subjects.id) AS Category
+	FROM books
 
-# (4) Betrachte die Tabelle books. Welcher Autor hat bisher am meisten Bücher veröffentlicht?
-# 	  > Tipp 1: Ermittle also zuerst alle unterschiedlichen Autoren, die es in der Tabelle gibt
-#	  > Tipp 2: Erweitere anschließend die Query, sodass für jeden gefundenen Autor eine Subquery gestartet wird, die zu diesem Autor die
-#               entsprechende Anzahl an Büchern ermittelt
-#     > Tipp 3: Beachte hierbei, dass hier das Subselect 2x auf der gleichen Tabelle ausgeführt wird – hier wirst du die Tabellen also u.U. 
-#               mit einem AS benennen müssen!
-# ---> Hinweis: Das würde mit einem GROUP BY sehr viel effizienter gehen – das haben wir uns aber noch nicht angeschaut…
+### (3) Zu welchem Thema gibt es am meisten Bücher, und wie viele Bücher sind das? 
+Betrachte die Tabelle books_subjects, ein Thema kann von mehreren Büchern verwendet werden. Wie oft kommt das beliebteste Thema vor? 
+
+	SELECT title,
+	    (SELECT COUNT(*) FROM books 
+	            WHERE books.subject_id = books_subjects.id) AS topic_freq
+	FROM books_subjects ORDER BY topic_freq DESC
+
+### (4) Betrachte die Tabelle books. Welcher Autor hat bisher am meisten Bücher veröffentlicht?
+Tipp 1: Ermittle also zuerst alle unterschiedlichen Autoren, die es in der Tabelle gibt <br/> 
+Tipp 2: Erweitere anschließend die Query, sodass für jeden gefundenen Autor eine Subquery gestartet wird, die zu diesem Autor die entsprechende Anzahl an Büchern ermittelt <br/>
+Tipp 3: Beachte hierbei, dass hier das Subselect 2x auf der gleichen Tabelle ausgeführt wird – hier wirst du die Tabellen also u.U. mit einem AS benennen müssen! <br/> 
+
+Hinweis: Das würde mit einem GROUP BY sehr viel effizienter gehen – das haben wir uns aber noch nicht angeschaut…
+
 		SELECT DISTINCT(creator),
 		    (SELECT COUNT(*) FROM books AS books_new 
 		            WHERE books_new.creator = books_old.creator) AS amount_books

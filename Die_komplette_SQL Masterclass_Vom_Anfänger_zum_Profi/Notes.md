@@ -454,7 +454,7 @@ Add columns name & surname from the table Customers to the table Orders *(comper
 
 	SELECT *,
 		(SELECT name, surname FROM Customers
-			WHERE Customers.ID = Orders.customer_id) AS name, name2
+			WHERE Customers.ID = Orders.customer_id) 
 	FROM Orders
 
 
@@ -468,19 +468,72 @@ Add columns name & surname from the table Customers to the table Orders *(comper
 ### Renaming of tables
 Instead of calling all columns from tables by 'tablename.column' we can abbreviate tablenames and make it more compact - this is especially important for complex queries!
 
-Example:
-
-Get the all IDs of 'Orders' and their corresponding amount of orders ()
+Example: Get the all IDs of 'Orders' and their corresponding amount of orders
 
 	SELECT DISTINCT(O.customer_id),
 		(SELECT COUNT(*) FROM Orders AS O2
 			WHERE 02.customer_id = 0.customer_id)
 	FROM Orders AS O
 
-### SELECT COLUMNS
+### NAME SUBSELECT COLUMNS (& use them to filter with WHERE)
+Added Columns can be renamed - if we need multiple cols pasted in a single col: `SELECT (id, time) FROM orders` // `SELECT CONCAT(id, time) FROM orders`
+
+	SELECT O.timestamp,
+		(SELECT firstname FROM customers 
+		 	WHERE customers.ID = o.ID) AS COLNAME_XY
+	FROM Orders AS O
+	WHERE COLNAME_XY LIKE A%
+
+### SUBSELECTS over multiple rows
+Einer ID können mehrere Zeitstemple zugeordnet werden, sodass verschiedene IDs eine verschiedene Anzahl an Zeilen bekommen würde.  
+Führt zum Fehler, wenn `ORDER BY timestamp DESC LIMIT 1` fehlt!  
+
+	SELECT *,
+		(SELECT timestamp FROM Orders
+			WHERE Orders.customer_ID = customer.ID
+			ORDER BY timestamp DESC LIMIT 1)
+	FROM Customers
 
 
+# 6. Exercise SUBSELECTS - Versuche, alle Aufgaben jeweils mit exakt einer Query zu lösen!
+Betrachte die Tabelle books. In der Spalte „language“ ist die jeweilige Sprache von einem jeden Buch notiert.
 
+### (1) Wie viel % der Bücher sind in deutscher Sprache? Versuche dies mit einer Query zu lösen!
+Tipp 1: Mit einem SELECT (SUBQUERY), (SUBQUERY) kannst du 2 komplett unterschiedliche Subqueries an die Datenbank schicken, sofern sie jeweils nur einen Wert aggregieren (z.B. die Anzahl ermitteln,…). Es wird hier nicht zwingend die Angabe einer Tabelle benötigt! <br/>
+Tipp 2: Auch kannst du die Ergebnisse direkt miteinander verrechnen: SELECT (SUBQUERY) / (SUBQUERY). Wichtig: Funktioniert so nur in MySQL, unter PostgreSQL gibt es noch was zu beachten – siehe Musterlösung.
+
+	SELECT
+		(SELECT COUNT(*) from books WHERE language = 'de')::float /  / # Amount of german books - type conversion important!
+		(SELECT COUNT(*) from books)::float /                          # Amount of all books
+
+
+### (2) Erstelle eine Auflistung aller Bücher inkl. dem jeweiligen Thema!
+Betrachte die Tabelle books. Jedes Buch hat ein Thema / eine Kategorie, die entsprechende Information hierzu findet sich in der Tabelle books_subjects. 
+
+	SELECT title, 
+	    (SELECT title FROM books_subjects 
+	        	WHERE books.subject_id = books_subjects.id) AS Category
+	FROM books
+
+### (3) Zu welchem Thema gibt es am meisten Bücher, und wie viele Bücher sind das? 
+Betrachte die Tabelle books_subjects, ein Thema kann von mehreren Büchern verwendet werden. Wie oft kommt das beliebteste Thema vor? 
+
+	SELECT title,
+	    (SELECT COUNT(*) FROM books 
+	            WHERE books.subject_id = books_subjects.id) AS topic_freq
+	FROM books_subjects ORDER BY topic_freq DESC
+
+### (4) Betrachte die Tabelle books. Welcher Autor hat bisher am meisten Bücher veröffentlicht?
+Tipp 1: Ermittle also zuerst alle unterschiedlichen Autoren, die es in der Tabelle gibt <br/> 
+Tipp 2: Erweitere anschließend die Query, sodass für jeden gefundenen Autor eine Subquery gestartet wird, die zu diesem Autor die entsprechende Anzahl an Büchern ermittelt <br/>
+Tipp 3: Beachte hierbei, dass hier das Subselect 2x auf der gleichen Tabelle ausgeführt wird – hier wirst du die Tabellen also u.U. mit einem AS benennen müssen! <br/> 
+
+Hinweis: Das würde mit einem GROUP BY sehr viel effizienter gehen – das haben wir uns aber noch nicht angeschaut…
+
+		SELECT DISTINCT(creator),
+		    (SELECT COUNT(*) FROM books AS books_new 
+		            WHERE books_new.creator = books_old.creator) AS amount_books
+		FROM books AS books_old ORDER BY amount_books DESC
 
 
 
