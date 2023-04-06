@@ -172,22 +172,25 @@ Hinweis: Das würde mit einem GROUP BY sehr viel effizienter gehen – das haben
 		            WHERE books_new.creator = books_old.creator) AS amount_books
 		FROM books AS books_old ORDER BY amount_books DESC
 
-# V109 7. Exercise JOINS - 
-#         Hinweis: Diese Aufgaben ähneln sich u.U. den Aufgaben zum Abschnitt „Subselect“ – sie sind aber unterschiedlich!
-# (1) Betrachte die Tabelle books. Jedes Buch hat ein Thema / eine Kategorie (Spalte: subject_id), die entsprechende Information 
-#     hierzu findet sich in der Tabelle books_subjects. 
-#     1.1 Erstelle eine Auflistung aus Büchern sowie den entsprechenden Themen, verwende hierzu einen JOIN
+# V109 7. Exercise JOINS
+Hinweis: Diese Aufgaben ähneln sich u.U. den Aufgaben zum Abschnitt „Subselect“ – sie sind aber unterschiedlich!
+
+### (1) Betrachte die Tabelle books. 
+Jedes Buch hat ein Thema / eine Kategorie (Spalte: subject_id), die entsprechende Information hierzu findet sich in der Tabelle books_subjects.
+
+#### 1.1 Erstelle eine Auflistung aus Büchern sowie den entsprechenden Themen, verwende hierzu einen JOIN
 		SELECT * FROM books
 		    LEFT JOIN books_subjects ON books.id = books_subjects.id
 
-# 	  1.2 Es gibt Bücher, bei denen die Spalte subject_id auf NULL gesetzt ist. Wenn du ein SELECT auf der Tabelle „books“ ausführst, 
-#         und die Tabelle „books_subjects“ per JOIN vernüpfst – welcher/welche JOIN-Typ(en) sorgt dafür, dass alle Bücher übersprungen werden, 
-#         wo die Spalte subject_id NULL ist?
+#### 1.2 Es gibt Bücher, bei denen die Spalte subject_id auf NULL gesetzt ist. 
+Wenn du ein SELECT auf der Tabelle „books“ ausführst, und die Tabelle „books_subjects“ per JOIN vernüpfst – welcher/welche JOIN-Typ(en) sorgt dafür, dass alle Bücher übersprungen werden,  wo die Spalte subject_id NULL ist?
+
 		SELECT * FROM books
     		LEFT JOIN books_subjects ON books.subject_id = books_subjects.id
 
-# 	  1.3 Wie viele deutschsprachige Liebesgeschichten (Thema: „Love stories“) gibt es? 
-#         Löse diese Frage – sofern möglich - mit einer einzigen Datenbankabfrage, ohne zuvor die ID des Themas „Love stories“ zu ermitteln!
+#### 1.3 Wie viele deutschsprachige Liebesgeschichten (Thema: „Love stories“) gibt es? 
+Löse diese Frage – sofern möglich - mit einer einzigen Datenbankabfrage, ohne zuvor die ID des Themas „Love stories“ zu ermitteln!
+
 		SELECT COUNT(*) FROM books
 		    LEFT JOIN books_subjects ON books.subject_id = books_subjects.id
 		    WHERE books.language = 'de' 

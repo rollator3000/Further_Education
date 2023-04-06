@@ -543,6 +543,10 @@ There are different types:
 - INNERJOIN
 - FULLJOIN
 
+<br/>
+![JOINS](pictures/Join_Info.png) 
+<br/>
+
 A: <br/>
 | ID | Name   |  
 |----|--------|  
@@ -588,4 +592,56 @@ We could also select only certain columns & merge the DFs based on 'ID' & 'C_ID'
 | ID | Name   | Course |  
 |----|--------|--------|  
 | 1  | Max    | Eng    |    
-| 2  | Moritz | Esp    |  
+| 2  | Moritz | Esp    | 
+
+## InnerJoin 
+Join DFs based on a certain column & do not even create all possible combinations as `CROSS JOIN`
+
+Same effect as the `CROSS JOIN B WHERE A.ID = B.ID` as we merge the rows of a DF based on certain columns - better performance!  
+It only keeps intersection of the two DFs within the selected column - only 'ID'/ 'C_IDs' in 'A' + 'B'.    
+We can also add a further `WHERE` at the end of the query
+
+	SELECT * FROM A
+		INNER JOIN B ON A.ID = B.C_ID
+
+## LEFT/ RIGHT/ FULL JOIN
+#### LEFT
+Match all rows of 'A' with the corresponding rows of 'B' that match in 'ID' & 'C_ID'.  
+We keep all IDs of 'A' and merge the columns from 'B' - if an ID appears in 'A' but not 'B' the merged columns get NULL values.  
+IDs that appear only in 'B' will not be in the joint table.  
+
+	SELECT * FROM A
+		LEFT JOIN B ON A.ID = B.C_ID
+
+#### RIGHT 
+Analog to left, but 'A' is changed with 'B'.  
+
+#### FULL
+Merge DFs based on a column, wherby no values are lost - if there is a value only in one of the DFs, there will be NULL values in the merged columns.  
+
+	SELECT * FROM A
+		FULL JOIN B ON A.ID = B.C_ID
+
+## 7. Exercise JOINS
+Hinweis: Diese Aufgaben ähneln sich u.U. den Aufgaben zum Abschnitt „Subselect“ – sie sind aber unterschiedlich!
+
+### (1) Betrachte die Tabelle books. 
+Jedes Buch hat ein Thema / eine Kategorie (Spalte: subject_id), die entsprechende Information hierzu findet sich in der Tabelle books_subjects.
+
+#### 1.1 Erstelle eine Auflistung aus Büchern sowie den entsprechenden Themen, verwende hierzu einen JOIN
+		SELECT * FROM books
+		    LEFT JOIN books_subjects ON books.id = books_subjects.id
+
+#### 1.2 Es gibt Bücher, bei denen die Spalte subject_id auf NULL gesetzt ist. 
+Wenn du ein SELECT auf der Tabelle „books“ ausführst, und die Tabelle „books_subjects“ per JOIN vernüpfst – welcher/welche JOIN-Typ(en) sorgt dafür, dass alle Bücher übersprungen werden,  wo die Spalte subject_id NULL ist?
+
+		SELECT * FROM books
+    		LEFT JOIN books_subjects ON books.subject_id = books_subjects.id
+
+#### 1.3 Wie viele deutschsprachige Liebesgeschichten (Thema: „Love stories“) gibt es? 
+Löse diese Frage – sofern möglich - mit einer einzigen Datenbankabfrage, ohne zuvor die ID des Themas „Love stories“ zu ermitteln!
+
+		SELECT COUNT(*) FROM books
+		    LEFT JOIN books_subjects ON books.subject_id = books_subjects.id
+		    WHERE books.language = 'de' 
+		    AND books_subjects.title LIKE '%Love stories%'
