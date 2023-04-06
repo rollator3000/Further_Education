@@ -536,4 +536,56 @@ Hinweis: Das würde mit einem GROUP BY sehr viel effizienter gehen – das haben
 		FROM books AS books_old ORDER BY amount_books DESC
 
 # (7) JOINS
+`JOINS` are used to merge different dataframes to a single one.  
+There are different types: 
+- CROSSJOIN
+- LEFTJOIN/ RIGHTJOIN
+- INNERJOIN
+- FULLJOIN
 
+A: <br/>
+| ID | Name   |  
+|----|--------|  
+| 1  | Max    |  
+| 2  | Moritz |  
+<br/>
+B: <br/>
+| C_ID | Course |  
+|------|--------|  
+| 1    | Eng    |  
+| 2    | Esp    |  
+<br/> 
+
+## CrossJoin
+Every entrance from A is comined with every entrance from B. <br/>
+New DF has the dimensions `nrow(A) * nrow(B)`- get really big quite easily! <br/>
+
+Example: Cross-Join of A & B basically get all possible row combinations:   
+
+	SELECT * FROM A
+	CROSS JOIN B
+	WHERE A.ID = B.C_ID
+  
+
+| ID | Name   | C_ID | Course |  
+|----|--------|------|--------|  
+| 1  | Max    | 1    | Eng    |  
+| 1  | Max    | 2    | Esp    |  
+| 2  | Moritz | 1    | Eng    |  
+| 2  | Moritz | 2    | Esp    |  
+<br/>
+
+We could also select only certain columns & merge the DFs based on 'ID' & 'C_ID':    
+
+	SELECT A.ID,
+		   A.Name,
+		   B.Course
+	FROM A
+	CROSS JOIN B
+	WHERE A.ID = B.C_ID
+  
+
+| ID | Name   | Course |  
+|----|--------|--------|  
+| 1  | Max    | Eng    |    
+| 2  | Moritz | Esp    |  
