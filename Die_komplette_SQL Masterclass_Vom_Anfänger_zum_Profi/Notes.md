@@ -146,9 +146,11 @@ Instead of `SELECT * WHERE (name = 'Julia' OR name = 'Paul`)
 
 	SELECT * FROM TABLE
 	WHERE name IN ('Julia', 'Anna')
+<br/>
 
 	SELECT * FROM TABLE
 	WHERE age BETWEEN 18 AND 25
+<br/>
 
 	SELECT * FROM TABLE
 	WHERE age BETWEEN 18 AND 25 AND
@@ -229,6 +231,7 @@ Can also be combined + take care that they return the same amount of rows.
 Use 'AS' to name columns.
 
 	SELECT CONCAT(UPPER(name), ' - ', LOWER(lastname)) AS last_name FROM TABLE
+<br/>
 
 	SELECT AVG(MIN(age), MAX(age)) AS LOL FROM TABLE
 
@@ -288,6 +291,7 @@ Select specific rows/ values with WHERE - in case you want to replace a single r
 Both commands have the same effect ('-' is replaced by '--') - UPDATE is permanently
 
 	SELECT REPLACE(title, '-', '--') FROM categories
+<br/>
 
 	UPDATE categories SET title = REPLACE(title, '-', '--')
 
@@ -295,6 +299,7 @@ Both commands have the same effect ('-' is replaced by '--') - UPDATE is permane
 Delete a whole dateset/ single rows e.g. with the value '5' in the column 'id'
 
 	DELETE FROM TABLE
+<br/>
 
 	DELETE FROM TABLE WHERE id = 5
 
@@ -397,7 +402,7 @@ Example:
 	CREATE TABLE table_name (
 		num_books INT NOT NULL DEFAULT 0
 		)
-
+<br/>
 
 	ALTER TABLE table_name (
 		ADD COLUMN num_books INT NOT NULL DEFAULT 0
@@ -416,6 +421,7 @@ Example:
 		id SERIAL PRIMARY KEY
 		title VARCHAR(100) NOT NULL
 	)
+<br/>
 
 	INSERT INTO table_name (title)
 		VALUES ("LOL")
@@ -765,4 +771,91 @@ In welcher Sprache sollten wir dieses Buch schreiben? Bzw. anders ausgedrückt: 
 
 		SELECT language, SUM(books.downloads) / COUNT(*) FROM books
 		    GROUP BY books.language 
-		    ORDER BY SUM(books.downloads) / COUNT(*) DESC #--> KO 455 sales per book
+		    ORDER BY SUM(books.downloads) / COUNT(*) DESC #--> KO 455 sales per book#
+
+# 8 Time & Date
+Important & very common date formats.  
+
+## UNIX-TimeStamp
+- Represent a date & time as an integer    
+- 01.01.1970 is the start time-point & we count the seconds from there - e.g. 1571657687 equals 21.10.2019 11:34:17 UTC *'(UTC is time-zone)*  
+- Can be used for calculations
+- **Atttention:** With 32-Bytes the possible values are limited to 1901 - 2038  
+<br/>
+
+**Formats _(Postgre)_:** 
+- **Attention:** Formats are different between MySQL & Postgre 
+- Time: `TIME`
+- Time + TimeZone: `TIME WITH TIMEZONE`
+- Date: `DATE`
+- Date + Time: `TIMESTAMP`
+- Date + Timet + TimeZone: `TIMESTAMP WITH TIMEZONE`
+<br/>
+
+**TIMEZONE:** The value is converted to `UTC` *(common world-time)* & back to the original time-zone when quieried.  
+<br/>
+Example on how to create a DF with time-columns & how to fill it:  
+
+	CREATE TABLE table_name (
+		id serial,
+		c_timestamp TIMESTAMP NULL,
+		c_timestamp_tz TIMESTAMP WITH TIMEZONE NULL,
+		c_date DATE NULL
+		PRIMARY KEY id
+		)
+<br/>
+
+	INSERT INTO table_name (c_timestamp, c_timestamp_tz, c_date)
+		VALUES ('2020-08-12 12:00:00', '2020-08-12 12:00:00', '2020-08-12')
+
+- Get the possible time-zones: `SELECT * FROM py_timezone_names`  
+- Adjust time-zone: `SET TIME ZONE 'Europe/Berlin'`
+- Get current time-zone: `SHOW TIMEZONE`  
+<br/>
+
+## Calculate with Date- & Time-Values
+- Current time w/o timezone: `LOCAL TIMESTAMP`
+- Current time w/ timezone: `CURRENT_TIMESTAMP`
+- Extract parts: `DATE_PART(part, TimeStamp)` 
+	- part: 'year', 'month', 'day', 'hour', ...  
+
+#### Calculate
+
+	SELECT timestamp `2020-01-01 00:00:00` - timestamp `2019-01-01 00:00:00`
+<br/>
+
+	SELECT timestamp `2020-01-01 00:00:00` + interval '2 days' # add 2 days to the current time  
+<br/>
+
+	SELECT DATE_PART('year', timestamp), 
+		   timestamp + interval '2 hours'
+	FROM Orders
+
+## Format time & date
+Adjust the format of a timestamp to a character with `TO_CHAR(timestamp, EXTRACTOR)`.  
+<br/>
+
+EXTRACTOR:  
+- HH24 = 0-24 hours
+- MI = 0-59 miuutes
+- SS = 0-59 seconds
+- YYYY = year
+- Month = Month as 'Jan', 'Feb', ... 
+- MM = Month as 01, 02, ...
+- day = Mon, Tue, ...
+- DD = day as 01, 02, ...
+
+Example:
+
+	SELECT timestamp, 
+		   TO_CHAR(timestamp, 'DD.MM.YYYY HH24:MM:SS') # Reformat the 'timestamp' column
+	FROM Orders
+
+# 10 Index
+Used to speed up queries!
+
+
+
+
+
+
