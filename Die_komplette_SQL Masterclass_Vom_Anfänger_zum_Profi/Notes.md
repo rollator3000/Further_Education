@@ -32,6 +32,7 @@ Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Pro
 	- NULL
 	- Standard Values
 	- ID / Primary-Key
+	- 5th Exercise
 6. Complex Queries 
 	- SUBSELECT
 	- Renaming of tables
@@ -51,8 +52,21 @@ Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Pro
 	- UNIX-TimeStamp
 	- Calculations
 	- Formations
-	- 
-10. Indexe
+	- 9th Exercise
+10. Index
+	- CREATE INDEX
+	- INDEX over multiple columns
+	- 10th Exericse
+11. FOREIGN KEY
+	- FOREIGN KEY
+	- ON DELETE
+	- ON DELETE
+12. VIEW
+	- CREATE VIEW
+	- CREATE MATERIALIZED VIEW
+13. COLLACTION
+
+<br/>
 
 # (1) Introduction
 This course covers the two databank-systems 'MySQL' & 'PostgreSQL' - both are commonly used frameworks with only small differences.  
@@ -64,7 +78,7 @@ This course covers the two databank-systems 'MySQL' & 'PostgreSQL' - both are co
 	- more features than MySQL   
 	- ideal for complex queries  
 
-There is SQL-Tool available online: https://downloads.codingcoursestv.eu/043%20-%20sql/online-sql/dist/index.html
+There is a SQL-Tool available online: https://downloads.codingcoursestv.eu/043%20-%20sql/online-sql/dist/index.html
 
 **Exemplary Query:**  
 Select the columns "id", "creator", "title" & "downloads" from the table "books" where "creator" equals ''Niemann, August'.  
@@ -479,6 +493,28 @@ Example:
 		VALUES ("LOL")
 
 --> This adds a new row with 'LOL' as title & automatically adds the primary key 'ID'
+
+## 5. Exercise Tabellen verwalten
+### (1) Erstelle eine Tabelle („newsletter“), in der wir die Registrierungen für einen Newsletter abspeichern können.
+Wir benötigen folgende Spalten:
+ID  
+E-Mail-Adresse vom Kunden (zwingend benötigt)  
+Name vom Kunden (optional)  
+Alter in Jahren (optional)  
+
+		CREATE TABLE newsletter (
+		    ID SERIAL PRIMARY KEY,
+		    EMail VARCHAR(1000) NOT NULL,
+		    Name VARCHAR(1000),
+		    Alter INTEGER
+		)
+
+### (2) Tabellen abändern
+Füge anschließend folgende Spalte zu der Tabelle noch hinzu: 
+- Datenschutzvereinbarung akzeptiert: Datentyp: BOOLEAN Standardmäßig ausgefüllt mit FALSE
+
+		ALTER TABLE newsletter 
+			ADD COLUMN Datenschutz BOOLEAN NOT NULL DEFAULT FALSE
 
 
 # (6) Complex Queries - SubSelect
@@ -903,11 +939,183 @@ Example:
 		   TO_CHAR(timestamp, 'DD.MM.YYYY HH24:MM:SS') # Reformat the 'timestamp' column
 	FROM Orders
 
-# 10 Index
-Used to speed up queries!
+## 9. Exercise - DATUMSWERTE
+### 1 Betrachte die Tabelle „books“, in dieser sind diverse Daten zu Büchern gespeichert.
+#### 1.1 Wie viele Bücher wurden im Jahr 2005 herausgegeben?
+		SELECT COUNT(*) FROM books
+		    WHERE DATE_PART('year', issued) = '2005'
+
+#### 1.2 Betrachte die Spalte „issued“ - in welchem Monat werden im Schnitt am meisten neue Bücher herausgegeben?
+		SELECT DATE_PART('month', issued), COUNT(*) AS counts FROM books
+		    GROUP BY DATE_PART('month', issued)
+		    ORDER BY counts DESC
+
+#### 1.3 Schwer: Welcher Autor war am längsten aktiv? 
+Anders ausgedrückt: Bei welchem Autor ist die Zeitdifferenz zwischen dem Herausgabedatum seines ersten Buches und seines letzten Buches am größten?
+
+		SELECT creator, MIN(issued), MAX(issued), MAX(issued) - MIN(issued) AS DIFF from books
+		    GROUP BY creator
+		    ORDER BY DIFF DESC
+
+# (10) Index
+Used to speed up queries - reduce the search time from `O(n) to O(log(n))` *(calc.-time from depending linear on n, to log(n))*.  
+With an Index, SQL can speed up the search with a 'binary search tree'.  
+
+## CREATE INDEX
+Example - a regular query that checks every row:   
+
+	SELECT * FROM orders
+		WHERE timestamp > '2010-01-01 00:00:00' AND timestamp < '2011-01-01 00:00:00'
+
+Now we add an index called 'index_col_name' to the column 'timestamp' in orders:  
+
+	CREATE INDEX index_col_name ON orders(timestamp, ASC)
+
+The same query is faster now, as SQL automatically uses the index!  
+
+## INDEX over multiple columns
+Create an index over multiple columns to speed up more complex queries - e.g. with `WHER firstname = 'Dave' AND lastname = 'Paul'`.  
+
+	CREATE INDEX customer_full_name ON orders(
+		firstname ASC,
+		lastname DESC
+		)
+
+## UNIQUE INDEX
+Create a unique index based on the value of a column - addind a value to the DF that already exists will throw an error then!  
+
+	CREATE UNIQUE INDEX customer_mail IN orders(email)
+<br/>
+Alternativly:  
+
+	ALTER TABLE customers ADD CONSTRAINT customer_email UNIQUE(email)
+
+## 10. Exercise INDEXE
+### (1) Betrachte die Tabelle „baby_names“.
+#### 1-1 Sortiere die Tabelle nach dem Namen. 
+		SELECT * FROM baby_names
+    		ORDER BY name ASC # --> 00:00:01.493
+
+#### 1-2 Wie lange dauert dies im Vergleich zu einer Sortierung nach einer anderen Spalte? 
+		SELECT * FROM baby_names
+    		ORDER BY year ASC # --> 00:00:01.392
+
+    	SELECT * FROM baby_names
+    		ORDER BY gender ASC # --> 00:00:01.302
+
+    	SELECT * FROM baby_names
+    		ORDER BY id ASC # --> 00:00:01.669
+
+    	SELECT * FROM baby_names
+    		ORDER BY count ASC # --> 00:00:01.210
+
+#### 1-3 Wie könntest du diese Sortierung beschleunigen?
+		CREATE INDEX name_id ON baby_names (
+    		name ASC
+		)
+<br/>
+
+		SELECT * FROM baby_names
+		    ORDER BY name ASC # --> 00:00:00.782
+
+OBACHT: Andere Ordnung als IDX -> langsamer
+
+		SELECT * FROM baby_names
+    		ORDER BY name DESC # -->  00:00:02.167
+
+# (11) FOREIGN KEY
+Used to validate the relation between variables.  
+'customer' has an ID-column, such that each customer has a unique ID *(ID)*.  
+'orders' also has ID-column for the customer *(customer-ID)*.  
+These IDs should be uniquly linkable & we don't want these links to be destroyed - both need the same data-type!    
+
+Example when you create a table - `customers(id)` has to be unique:
+
+	CREATE TABLE orders (
+		..., 
+		customer_id = big int,
+		FOREIGN KEY (customer_id) REFERENCES customers(id)
+		)
+
+Alternativly add it to exisiting tables
+
+	ALTER TABLE orders ADD FOREIGN KEY (customer_id)
+		REFERENCES customer(id)
+
+## ON UPDATE
+Decide what happens to the FOREIGN ID, when an `UPDATE` is applied to it.  
+
+- Can not be changed: `ON UPDATE RESTRITCT`
+- Set it to NULL if changed: `ON UPDATE SET NULL`
+- Change the primary key in both DFs: `ON UPDATE CASCADE`
+
+## ON DELETE
+Decide what happens to the FOREIGN ID, when an `DELETE` is applied to it.  
+
+- Must not be deleted: `ON DELETE RESTRICT`
+- If deleted set to NULL: `ON DELETE SET NULL`
+- If deleted in one table, delete in both: `ON DELETE CASCADE`
+
+Example 1:
+
+	ALTER TABLE orders 
+		ADD FOREIGN KEY (customer_id) REFERENCES customers(id)
+		ON UPDATE CASCADE
+		ON DELETE SET NULL
+
+Example 2:
+
+	CREATE TABLE orders2 (
+		id BIGSERIAL,
+		customer_id int, 
+		FOREIGN KEY (customer_id) REFERENCES customers(id)
+			ON UPDATE CASCADE
+			ON DELETE SET NULL
+		)
+<br/>
+Now we add an new 'customer_id' to 'orders2' -> automatically adds 'id' in 'customers'
+
+	INSERT INTO orders2 (customer_id) VALUES(162)
+<br/>
+Can not change the value of the reference ID
+
+	UPDATE customers SET id = 1620 WHERE id = 162
 
 
+# (12) VIEW
+A `VIEW` can save a query as a virtual table - if something changes in the data, the results of the query in the virtual table change aswell!  
+It is like a function for a query & cery handy for complex queries, but `UPDATES` & `INSERT` are limited, as well as index can't be used!  
 
+## CREATE VIEW
 
+Example for a complex query:
 
+	SELECT firstname, lastname,
+		SELECT (timestamp FROM orders WHERE orders.customer_id = customers.ID)
+	FROM customers
 
+This query can now be saved into a VIEW:
+
+	CREATE VIEW customer_view AS 
+		SELECT firstname, lastname,
+			SELECT (timestamp FROM orders WHERE orders.customer_id = customers.ID)
+		FROM customers
+
+Call this view & optionally add further filters: 
+
+	SELECT customer_view WHERE last_order IS NOT NULL
+
+## CREATE MATERIALIZED VIEW
+Similiar to `CREATE VIEW`, but with this the data of the query is actually saved as data.  
+Hence a MATERIALIZED VIEW is faster than a regular VIEW, but needs more memory!  
+In case the original data change, MATERIALIZED VIEW needs to refreshed to get the results on the changed data.  
+
+	CREATE MATERIALIZED VIEW customer_view_m AS
+		SELECT firstname, lastname,
+			SELECT (timestamp FROM orders WHERE orders.customer_id = customers.ID)
+		FROM customers
+
+# (13) COLLACTION
+When ordering data according to a text, we can change the language specific ABC for that.  
+In the german ABC, the letter 'Ä' is treated as an 'A' & with english 'Ä' is not equal to 'A'.  
+Can be changed within the GUI.  

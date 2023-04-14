@@ -196,7 +196,7 @@ Löse diese Frage – sofern möglich - mit einer einzigen Datenbankabfrage, ohn
 		    WHERE books.language = 'de' 
 		    AND books_subjects.title LIKE '%Love stories%'
 
-# V120 7. Exercise GROUP BY
+# V120 8. Exercise GROUP BY
 
 ### (1) In der Tabelle „baby_names“ finden sich Geburtsstatistiken aus den USA. 
 
@@ -286,30 +286,31 @@ In welcher Sprache sollten wir dieses Buch schreiben? Bzw. anders ausgedrückt: 
 		    GROUP BY books.language 
 		    ORDER BY SUM(books.downloads) / COUNT(*) DESC #--> KO 455 sales per book
 
-# 135 8. Exercise DATUMSWERTE
-# Betrachte die Tabelle „books“, in dieser sind diverse Daten zu Büchern gespeichert.
-# 	  1.1 Wie viele Bücher wurden im Jahr 2005 herausgegeben?
+# V135: 9. Exercise DATUMSWERTE
+### 1 Betrachte die Tabelle „books“, in dieser sind diverse Daten zu Büchern gespeichert.
+#### 1.1 Wie viele Bücher wurden im Jahr 2005 herausgegeben?
 		SELECT COUNT(*) FROM books
 		    WHERE DATE_PART('year', issued) = '2005'
 
-#  	  1.2 Betrachte die Spalte „issued“. In welchem Monat werden im Schnitt am meisten neue Bücher herausgegeben?
+#### 1.2 Betrachte die Spalte „issued“ - in welchem Monat werden im Schnitt am meisten neue Bücher herausgegeben?
 		SELECT DATE_PART('month', issued), COUNT(*) AS counts FROM books
 		    GROUP BY DATE_PART('month', issued)
 		    ORDER BY counts DESC
 
-#	  1.3 Schwer: Welcher Autor war am längsten aktiv? Anders ausgedrückt: 
-#         Bei welchem Autor ist die Zeitdifferenz zwischen dem Herausgabedatum seines ersten Buches und seines letzten Buches am größten?
+#### 1.3 Schwer: Welcher Autor war am längsten aktiv? 
+Anders ausgedrückt: Bei welchem Autor ist die Zeitdifferenz zwischen dem Herausgabedatum seines ersten Buches und seines letzten Buches am größten?
+
 		SELECT creator, MIN(issued), MAX(issued), MAX(issued) - MIN(issued) AS DIFF from books
 		    GROUP BY creator
 		    ORDER BY DIFF DESC
 
-# 149 9. Exercise INDEXE
-# Betrachte die Tabelle „baby_names“.
-# Sortiere die Tabelle nach dem Namen. 
+# 149 10. Exercise INDEXE
+### (1) Betrachte die Tabelle „baby_names“.
+#### 1-1 Sortiere die Tabelle nach dem Namen. 
 		SELECT * FROM baby_names
     		ORDER BY name ASC # --> 00:00:01.493
 
-# Wie lange dauert dies im Vergleich zu einer Sortierung nach einer anderen Spalte? 
+#### 1-2 Wie lange dauert dies im Vergleich zu einer Sortierung nach einer anderen Spalte? 
 		SELECT * FROM baby_names
     		ORDER BY year ASC # --> 00:00:01.392
 
@@ -322,20 +323,22 @@ In welcher Sprache sollten wir dieses Buch schreiben? Bzw. anders ausgedrückt: 
     	SELECT * FROM baby_names
     		ORDER BY count ASC # --> 00:00:01.210
 
-# Wie könntest du diese Sortierung beschleunigen?
+#### 1-3 Wie könntest du diese Sortierung beschleunigen?
 		CREATE INDEX name_id ON baby_names (
     		name ASC
 		)
+<br/>
 
 		SELECT * FROM baby_names
 		    ORDER BY name ASC # --> 00:00:00.782
 
-		# OBACHT 
+OBACHT:
+
 		SELECT * FROM baby_names
     		ORDER BY name DESC # --> 00:00:02.167 -> andere Ordnung als IDX -> langsamer
 
 
-# 202 10. Exercise FUNCTIONS
+# 202 11. Exercise FUNCTIONS
 # Schreibe eine Funktion, die - anhand einer ID - einen einzelnen Kunden von customers zurück gibt 
 # & tracked wann welche ID angefragt wurde.
 # (1) Erstelle eine 'Logg'-Tabelle, um die Daten zu speichern
@@ -365,7 +368,7 @@ SELECT * FROM loggs
 SELECT * FROM customer_info_w_logg(23)
 SELECT * FROM loggs
 
-# 237 11. Exercise TRIGGER
+# 237 12. Exercise TRIGGER
 # 'customers' hat alle Kunden & für eine Anwendung brauchen wir für jeden Kunden den gesamtem Umsatz 
 # - füge dies als extra Spalte zu 'customers' hinzu (Umsatz berechnet sich über 'amount' in 'orders'
 #     --> Löse dieses Problem über verschiedene Wege
