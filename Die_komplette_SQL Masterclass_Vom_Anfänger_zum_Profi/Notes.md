@@ -1,6 +1,58 @@
 # COMPLETE SQL-MASTERCLASS
 
-Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Profi' - https://www.udemy.com/course/sql-komplett/
+Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Profi' - https://www.udemy.com/course/sql-komplett/  
+
+## Overview
+1. Introduction  
+2. Installation of PostgreSQL  
+3. Databank Queries
+	- SELECT  
+	- WHERE  
+	- COUNT  
+	- DISTINCT  
+	- 1st Exercise  
+	- LIKE  
+	- IN & BETWEEN  
+	- 2nd Exercise  
+	- ORDER BY 
+	- LIMIT
+	- Bulit-In Functions
+	- AS
+	- 3rd Exercise
+4. Manage Data
+	- INSERT INTO
+	- UPDATE
+	- DELETE 
+	- 4th Exercise
+5. Manage tables
+	- DATATYPES
+		- TEXT
+		- NUMBERS
+	- Manage Columns
+	- NULL
+	- Standard Values
+	- ID / Primary-Key
+6. Complex Queries 
+	- SUBSELECT
+	- Renaming of tables
+	- Naming subselect columns 
+	- SUBSELECTS w/ multiple rows
+	- 6th Exercise
+7. JOINS
+	- CROSSJOIN
+	- INNERJOIN
+	- LEFT-/ RIGHTJOIN
+	- FULLJOIN
+	- 7th Exercise
+8. GROUP BY
+	- Filter
+	- 8th Exercise
+9. Time & Date
+	- UNIX-TimeStamp
+	- Calculations
+	- Formations
+	- 
+10. Indexe
 
 # (1) Introduction
 This course covers the two databank-systems 'MySQL' & 'PostgreSQL' - both are commonly used frameworks with only small differences.  
@@ -266,7 +318,7 @@ Löse dies mit einem WHERE und einem LIKE (hier gab es einen speziellen Platzhal
 
 	SELECT DISTINCT("name") FROM baby_names ORDER BY "name" OFFSET 10 LIMIT 1 # -> Aarna
 
-# (4) MANAGE DATA
+# (4) Manage Data
 ## INSERT INTO
 Put new data permanently into existing data - if 'TABLE' had an 3rd column the added row would contain NULL.  
 
@@ -563,7 +615,7 @@ B: <br/>
 | 2    | Esp    |   
 <br/> 
 
-## CrossJoin
+## CROSSJOIN
 Every entrance from A is comined with every entrance from B. <br/>
 New DF has the dimensions `nrow(A) * nrow(B)`- get really big quite easily! <br/>
 
@@ -597,7 +649,7 @@ We could also select only certain columns & merge the DFs based on 'ID' & 'C_ID'
 | 1  | Max    | Eng    |    
 | 2  | Moritz | Esp    | 
 
-## InnerJoin 
+## INNER JOIN 
 Join DFs based on a certain column & do not even create all possible combinations as `CROSS JOIN`
 
 Same effect as the `CROSS JOIN B WHERE A.ID = B.ID` as we merge the rows of a DF based on certain columns - better performance!  
@@ -649,7 +701,7 @@ Löse diese Frage – sofern möglich - mit einer einzigen Datenbankabfrage, ohn
 		    WHERE books.language = 'de' 
 		    AND books_subjects.title LIKE '%Love stories%'
 
-# 8 GROUP-BY
+# (8) GROUP BY
 Group the data according to a certain column - faster than SUBSELECT & can be combined with functions.  
 All columns that are used in `GROUP BY` must be in the `SELECT`!  
 <br/>
@@ -773,7 +825,7 @@ In welcher Sprache sollten wir dieses Buch schreiben? Bzw. anders ausgedrückt: 
 		    GROUP BY books.language 
 		    ORDER BY SUM(books.downloads) / COUNT(*) DESC #--> KO 455 sales per book#
 
-# 8 Time & Date
+# (9) Time & Date
 Important & very common date formats.  
 
 ## UNIX-TimeStamp
