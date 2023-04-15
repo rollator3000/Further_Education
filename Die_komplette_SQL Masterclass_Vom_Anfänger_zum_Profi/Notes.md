@@ -65,6 +65,10 @@ Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Pro
 	- CREATE VIEW
 	- CREATE MATERIALIZED VIEW
 13. COLLACTION
+14. TRANSACTION
+	- START TRANSACTION 
+	- Locking
+15. Modeling databases
 
 <br/>
 
@@ -1119,3 +1123,51 @@ In case the original data change, MATERIALIZED VIEW needs to refreshed to get th
 When ordering data according to a text, we can change the language specific ABC for that.  
 In the german ABC, the letter 'Ä' is treated as an 'A' & with english 'Ä' is not equal to 'A'.  
 Can be changed within the GUI.  
+
+# (14) TRANSACTION
+## START TRANSACTION 
+Used when sending multiple queries to a single databank - e.g. A sends 50€ to B: A - 50€ & B + 50€  
+Two `UPDATE` commands are needed in this scenario & it could happen that something crashes wihtin the two commands.  
+Either update both or none with `TRANSACTION`:
+
+	START TRANSACTION
+		UPDATE A ...
+		UPDATE B ...
+	COMMIT // ROLLBACK
+
+All commands below `START TRANSACTION` are temporary wait for `COMMIT` to run // `ROLLBACK` to abort!  
+
+
+Account:  
+
+| ID | Name   | Balance |  
+|----|--------|---------|  
+| 1  | Max    | 100     |  
+| 2  | Moritz | 150     |  
+
+Max sends Moritz 50€  
+
+Oldschool - could happen that only one query is succesful:    
+
+	UPDATE Account SET Balance = Balance + 50 WHERE name = 'Moritz'   
+	UPDATE Account SET Balance = Balance - 50 WHERE name = 'Max'  
+  
+Newschool - ensure both commands run at the same time:  
+
+	START TRANSACTION
+		UPDATE Account SET Balance = Balance + 50 WHERE name = 'Moritz'
+		UPDATE Account SET Balance = Balance - 50 WHERE name = 'Max'
+	COMMIT
+
+## Locking
+When Max sends his 75€ to Moritz & hit 'send money' twice then this could be run twice then... - prevent this with `FOR UPDATE`.  
+`FOR UPDATE` ensures that the query only runs again after `COMMIT` - so if there are multiple transactions from 'Max', they have to queue & wait for the previous transactions to be commited!  
+
+	START TRANSACTION 
+		UPDATE Account SET Balance = Balance - 75 WHERE name = 'Max' FOR UPDATE
+		UPDATE Account SET Balance = Balance + 75 WHERE name = 'Moritz'
+	COMMIT
+
+There are many more nuancen for locking - e.g. Write-Lock, Read-Lock, Table-Lock, ... - google this with 'DeadLocks postgre SQL'.  
+
+# (15) Modeling databases
