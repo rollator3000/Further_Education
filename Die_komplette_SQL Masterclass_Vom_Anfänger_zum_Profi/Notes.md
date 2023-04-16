@@ -69,6 +69,15 @@ Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Pro
 	- START TRANSACTION 
 	- Locking
 15. Modeling databases
+	- 1st Normalform
+	- 2nd Normalform
+	- 3rd Normalform  
+	- Alternatives to Normalform
+	- Postgre Example
+16. Permissions
+	- PostgreSQL
+17. Stored Functions & Procedures  
+
 
 <br/>
 
@@ -1171,3 +1180,165 @@ When Max sends his 75€ to Moritz & hit 'send money' twice then this could be r
 There are many more nuancen for locking - e.g. Write-Lock, Read-Lock, Table-Lock, ... - google this with 'DeadLocks postgre SQL'.  
 
 # (15) Modeling databases
+## 1st Normalform
+Every attribute of the relation needs an atomic value range and the relation has to be free of repeating groups - this basically means **no composite values**!  
+
+| Name            | Semester | Subjects              |  
+|-----------------|----------|-----------------------|  
+| Max Mauer       | 3        | Algebra 1, Analysis 3 |  
+| Paul Mustermann | 1        | Math 1, CS2           |  
+<br/>
+This table violates the 1st normalform, as the columns 'Name' & 'Subjects' contain multiple values & hence it's no atomic value range!  
+The corrected version splits up 'Name' into first- & lastname + generates a seperate row for every subject:  
+
+ID | Firstname | Lastname   | Semester | Subjects   |  
+---|-----------|------------|----------|------------|  
+1  | Max       | Mauer      | 3        | Algebra 1  |  
+1  | Max       | Mauer      | 3        | Analysis 3 |  
+2  | Paul      | Mustermann | 1        | Math1      |  
+2  | Paul      | Mustermann | 1        | CS2        |  
+<br/> 
+
+## 2nd Normalform  
+A relation is in 2nd normal form if the first normal form exists & no non-primary attribute depends functionally on a true subset of a key candidate.  
+- key candidate: Primary key - must not repeat *(e.g. ID + Subjects)*  
+- non-primary attribute: All columns that are no primary keys *(e.g. Semester, first- & lastname)*  
+<br/>
+
+**Non-primary attributes only depend on the ID & not any other colum -> depend only on a part of the primary keys**  
+*(e.g. 'Max', 'Mauer' & '3' only depend on the ID and not on 'Subjects')*   
+<br/>
+
+Example: Split the DF from '1st Normalform' into two seperate DFs:
+
+| ID | Firstname | Lastname   | Semester | Start      |  
+|----|-----------|------------|----------|------------|  
+| 1  | Max       | Mauer      | 3        | 01.01.2020 |  
+| 2  | Paul      | Mustermann | 1        | 01.01.2021 |  
+<br/>
+
+| ID | Subject    |  
+|----|------------|  
+| 1  | Algebra 1  |  
+| 1  | Analysis 3 |  
+| 2  | Math 1     |  
+| 2  | CS2        |  
+<br/>
+
+Now none of the tables contain repated values, while we loose no information!  
+
+## 3rd Normalform  
+3rd normal form exists if the relation schema is in 2nd normal form and no non-primary attribute is transitively dependent on a key candidate.  
+- transitively dependent: a column is not the result of an other column (redundancy)
+<br/> 
+
+Example: From 'Start' we can know the 'Semester' & do not actually need it to get this information!   
+
+| ID | Firstname | Lastname   | Semester-Start-ID|   
+|----|-----------|------------|------------------|  
+| 1  | Max       | Mauer      | 1                |  
+| 2  | Paul      | Mustermann | 2                |   
+<br/>
+
+| ID | Subject    |  
+|----|------------|  
+| 1  | Algebra 1  |  
+| 1  | Analysis 3 |  
+| 2  | Math 1     |  
+| 2  | CS2        |  
+<br/>
+
+| Semester-ID | Start      |  
+|-------------|------------|  
+| 1           | 01.01.2020 |  
+| 2           | 01.01.2021 |  
+<br/>
+
+==> Now the data contains no repetative information & everything is clear - Normalform is not always handy..!  
+
+## Alternatives to Normalform  
+3 tables for the orginaisation of a university:   
+- Student: ID, Firstname, Lastname, Title  
+- Lecture: Title, Desc, When  
+- Instructor: Firstname, Lastname  
+<br/> 
+
+**'Student' &harr; 'Lecture'**: [0,n] &harr; [0,n]   
+Many-to-Many relation, as a student can go to multiple lectures!  
+<br/> 
+
+**'Lecture' &harr; 'Instructor'**: [0,n] &harr; 1   
+One-to-Many relation, as a prof can have multiple lectures, but every lecture only has one prof!   
+<br/>
+
+This could also be done differently as well with an additonal table 'Lecture_Studtens' mapping the student-ID and the Lecture-Title.  
+<br/>
+
+#### Basic Concept:
+- Every object has a seperate table *(one for students, one for lecture, ...)*  
+- How are the relations between the objects:  
+	- Many-to-Many  
+	- Many-to-One  
+  
+## Postgre Example:
+### 1) Create the tables
+	CREATE TABLE students (
+		id bigserial NOT NULL,
+		firstname character varying(100) NOT NULL,
+		lastname character varying(100) NOT NULL,
+		title character varying(100) DEFAULT '',
+		PRIMARY KEY (id)
+		)
+<br/>
+
+	CREATE TABLE instructors ( id, firstname, lastname, PRIMARY KEY (id) )
+<br/> 
+
+	CREATE TABLE lectures ( id, title, desc, when, instructor_id,  PRIMARY KEY (id))
+<br/>
+
+### 2) Connect the tables
+
+	ALTER TABLE lectures 
+		ADD CONTRAINT lectures_instructores_id FOREIGN KEY (instructor_id)
+		REFERENCES instructors (id)
+	ON UPDATE restrict  
+	ON DELETE restrict
+  
+Connect the column 'instructor_id' from 'lectures' to the 'id' in 'instructors'!  
+
+# (16) Permissions  
+Up to now, we have used it as administrator & have access to everything in PostgreSQL.  
+We can restrict permissions of users *(& hackers)*, such that they can not:  
+- Modify tables afterwards  
+- Have access to all tables  
+- see sensitive data  
+  
+To improve security, an application should only have access to the tables it actually needs!  
+Big differences between MySQL & PostgreSQL!  
+
+## PostgreSQL
+### Add new user
+*SERVERS* &rarr; *Login / Group Rules* &rarr; *right-click* &rarr; *CREATE* &rarr; *Login / Group Rule*  
+<br/> 
+
+Create a new user with name, password & privileges:  
+- Login possible?
+- Super User? *(= Admin)*  
+- Create users?  
+- Create databases?  
+- Inherit rights?  
+
+### Grant access to tables
+The newly created user has still no acccess to the data! We need to grant access first:  
+*Select Table on left side* &rarr; *right-click* &rarr; *Security* &rarr; *Priviliges* &rarr; *select user* &rarr; *grant rights* (ALL/ SELECT/ INSERT/ DELETE/ UPDATE/ ...)  <br/>
+'WITH GRANDOPTION': User can allow same access he has!  
+<br/> 
+
+### Column authorization
+We can also stop access to sensitive columns:  
+- Remove the user from the current table: *right-click on DF* &rarr; *Properties* &rarr; *Securities* &rarr; *Remove user*  
+- Access to single columns: *Opem the DF* &rarr; *right-click on a column* &rarr; *Priviliges* &rarr; *select user* &rarr; *select rights*  
+
+# (17) Stored Functions & Procedures
+
