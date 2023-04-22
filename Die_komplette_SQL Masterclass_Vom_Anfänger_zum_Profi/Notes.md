@@ -77,6 +77,18 @@ Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Pro
 16. Permissions
 	- PostgreSQL
 17. Stored Functions & Procedures  
+	- Return multiple values  
+	- Return a table  
+	- Pass parameters to a function    
+	- Optimize functions    
+		- IMMUTABLE  
+		- STABLE  
+		- VOLATILE  
+	- Function privileges  
+	- Log-Files  
+	- DrawBacks  
+	- 11th Exercise
+18. Full text search  
 
 
 <br/>
@@ -1341,4 +1353,130 @@ We can also stop access to sensitive columns:
 - Access to single columns: *Opem the DF* &rarr; *right-click on a column* &rarr; *Priviliges* &rarr; *select user* &rarr; *select rights*  
 
 # (17) Stored Functions & Procedures
+Create your own programms & directly run complex queries.  
+A stored procedure is basically like a stored function but doesn't return any values and is called via `CALL procedure` and not like `SELECT function`.   
 
+Example create function 'select_one' that doesn't take arguments, runs SQL queries & returns '1' as bigint:  
+
+	CREATE FUNCTION select_one() RETURNS bigint AS $$
+		SELECT 1 AS Result
+	$$ LANGUAGE SQL;
+<br/>
+
+To run the function now: 
+
+	SELECT select_one()
+<br/>
+
+## Return multiple values
+To return multiple values from a function add `SET OF` after `RETURN` - in the example, the function returns a list of 'bigint' values instead of a single one.  
+
+	CREATE FUNCTION get_ids() RETURNS SET OF bigint AS $$
+		SELECT id FROM customers
+	$$ LANGUAGE SQL;
+<br/> 
+
+	SELECT get_ids()
+<br/>
+
+## Return a table
+To return a table add `TABLE` after `RETURN` and assign the colnames & their corresponding types *(TABLE(col, coltype, col, coltype, ...))*.  
+
+	CREATE FUNCTION table_() RETURN TABLE (id, bigint, email, varchar) AS $$
+		SELECT id, email FROM customers
+	$$ LANGUAGE SQL;
+<br/> 
+
+	SELECT * FROM table_()
+<br/> 
+
+## Pass parameters to a function  
+A function can also recieve a set of values as parameters - e.g. take to character values and paste them together *($1 = 1st argument, $2 = 2nd argument, ...)*:    
+
+	CREATE FUNCTION get_name(varchar, varchar) RETURN varchar AS $$
+		CONCAT($2, ', ', $1)
+<br/> 
+
+	get_name("LOL", "xD")
+<br/>
+
+## Optimize functions  
+### IMMUTABLE
+Function doesn't change the original data & result only depends on the parameters - same parameters, same results!  
+
+	CREATE FUNCTION get_name(varchar, varchar) RETURNS VARCHAR IMMUTABLE AS $$ ... $$
+<br/>
+
+### STABLE
+Can't change values in the original data and only look them up.  
+
+	CREATE FUNCTION get_customers(bigint) RETURNS TABLE (...) STABLE AS $$
+		SELECT * FROM customers WHERE id = $1
+	$$ LANGUAGE SQL;
+<br/>
+
+### VOLATILE
+Result of a function can change & hence the function is executed separately each time - not really optimizable..!  
+
+	CREATE FUNCTION ... RETURN ... VOLATILE AS $$ ... $$ 
+<br/>
+
+## Function privileges
+Decide if a function runs with the rights of the function creater *(`SECURITY DEFINER`)* or the function caller *(`SECURITY INVOKER`)*!  
+
+	CREATE FUNCTION get_customers 
+		RETURNS TABLE (...) 
+		SECURITY DEFINER
+		VOLATILE AS $$
+			SELECT * FROM customers WHERE id = $1
+		$$ LANGUAGE SQL;
+<br/>
+
+## Log-Files
+There is a databank 'logg' existing with 'ID' & 'TimeStamp' as columns.  
+Everytime a function is called, we can add data to the logging databank *(ID is set automatically to every new entrance, so we only need to add the time)*.    
+
+	CREATE FUNCTION c_w_logg() RETURNS TABLE(id, bigint, email, varchar) VOLATILEN AS $$
+		INSERT INTO logg('timestamp') VALUES(CURRENT_TIMESTAMP);
+		SELECT id, email FROM customers
+	$$ LANGUAGE SQL;
+<br/>
+
+## DrawBacks
+- Tests are more complicated  
+- Functions & Procedures depend on the databanksystem
+- SQL is actually only a databank and hence not optimal to write applications...  
+
+## 11. Exercise 
+Schreibe eine Funktion, die - anhand einer ID - einen einzelnen Kunden von customers zurück gibt & tracked wann welche ID angefragt wurde.
+
+### (1) Erstelle eine 'Logg'-Tabelle, um die Daten zu speichern
+	CREATE TABLE loggs (
+	    ID SERIAL PRIMARY KEY,
+	    time_stamp TIMESTAMP WITH TIME ZONE,
+	    queried_ID BIGINT
+	)
+
+### (2) Erstelle eine Funktion, die anhand der ID einen customers-Eintrag zurück gibt & die Anfrage, sowie die angefragte ID loggt
+	CREATE FUNCTION customer_info_w_logg(bigint) RETURNS table(id bigint, email varchar, name_full varchar) AS $$
+	    INSERT INTO loggs("time_stamp", "queried_id") VALUES(CURRENT_TIMESTAMP, $1);
+	    SELECT id, email, concat(firstname, lastname) FROM customers
+	        WHERE ID = $1
+	    $$ LANGUAGE SQL
+
+### (3) Erstelle eine Anfrage & vergleich die Ergebnisse + check ob es gelogged wurde
+#### (3-1) Orginal ID
+	SELECT id, email, concat(firstname, lastname) FROM customers
+	    WHERE ID = 23
+
+#### (3-2) Original loggs
+	SELECT * FROM loggs
+
+#### (3-3) Run the request + check the loggs table
+	SELECT * FROM customer_info_w_logg(23)
+<br/>
+
+	SELECT * FROM loggs
+<br/>
+
+# (18) Full text search

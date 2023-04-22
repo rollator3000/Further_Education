@@ -313,12 +313,15 @@ Anders ausgedrückt: Bei welchem Autor ist die Zeitdifferenz zwischen dem Heraus
 #### 1-2 Wie lange dauert dies im Vergleich zu einer Sortierung nach einer anderen Spalte? 
 		SELECT * FROM baby_names
     		ORDER BY year ASC # --> 00:00:01.392
+<br/>
 
     	SELECT * FROM baby_names
     		ORDER BY gender ASC # --> 00:00:01.302
+<br/>
 
     	SELECT * FROM baby_names
     		ORDER BY id ASC # --> 00:00:01.669
+<br/>
 
     	SELECT * FROM baby_names
     		ORDER BY count ASC # --> 00:00:01.210
@@ -337,36 +340,36 @@ OBACHT:
 		SELECT * FROM baby_names
     		ORDER BY name DESC # --> 00:00:02.167 -> andere Ordnung als IDX -> langsamer
 
-
 # 202 11. Exercise FUNCTIONS
-# Schreibe eine Funktion, die - anhand einer ID - einen einzelnen Kunden von customers zurück gibt 
-# & tracked wann welche ID angefragt wurde.
-# (1) Erstelle eine 'Logg'-Tabelle, um die Daten zu speichern
-CREATE TABLE loggs (
-    ID SERIAL PRIMARY KEY,
-    time_stamp TIMESTAMP WITH TIME ZONE,
-    queried_ID BIGINT
-)
+Schreibe eine Funktion, die - anhand einer ID - einen einzelnen Kunden von customers zurück gibt & tracked wann welche ID angefragt wurde.
 
-# (2) Erstelle eine Funktion, die anhand der ID einen customers-Eintrag zurück gibt &
-#     die Anfrage, sowie die angefragte ID loggt
-CREATE FUNCTION customer_info_w_logg(bigint) RETURNS table(id bigint, email varchar, name_full varchar) AS $$
-    INSERT INTO loggs("time_stamp", "queried_id") VALUES(CURRENT_TIMESTAMP, $1);
-    SELECT id, email, concat(firstname, lastname) FROM customers
-        WHERE ID = $1
-    $$ LANGUAGE SQL
+### (1) Erstelle eine 'Logg'-Tabelle, um die Daten zu speichern
+	CREATE TABLE loggs (
+	    ID SERIAL PRIMARY KEY,
+	    time_stamp TIMESTAMP WITH TIME ZONE,
+	    queried_ID BIGINT
+	)
 
-# (3) Erstelle eine Anfrage & vergleich die Ergebnisse + check ob es gelogged wurde
-# 3-1) Orginal ID
-SELECT id, email, concat(firstname, lastname) FROM customers
-    WHERE ID = 23
+### (2) Erstelle eine Funktion, die anhand der ID einen customers-Eintrag zurück gibt & die Anfrage, sowie die angefragte ID loggt
+	CREATE FUNCTION customer_info_w_logg(bigint) RETURNS table(id bigint, email varchar, name_full varchar) AS $$
+	    INSERT INTO loggs("time_stamp", "queried_id") VALUES(CURRENT_TIMESTAMP, $1);
+	    SELECT id, email, concat(firstname, lastname) FROM customers
+	        WHERE ID = $1
+	    $$ LANGUAGE SQL
 
-# 3-2) Original loggs
-SELECT * FROM loggs
+### (3) Erstelle eine Anfrage & vergleich die Ergebnisse + check ob es gelogged wurde
+#### (3-1) Orginal ID
+	SELECT id, email, concat(firstname, lastname) FROM customers
+	    WHERE ID = 23
 
-# 3-3) Run the request + check the loggs table
-SELECT * FROM customer_info_w_logg(23)
-SELECT * FROM loggs
+#### (3-2) Original loggs
+	SELECT * FROM loggs
+
+#### (3-3) Run the request + check the loggs table
+	SELECT * FROM customer_info_w_logg(23)
+<br/>
+
+	SELECT * FROM loggs
 
 # 237 12. Exercise TRIGGER
 # 'customers' hat alle Kunden & für eine Anwendung brauchen wir für jeden Kunden den gesamtem Umsatz 
