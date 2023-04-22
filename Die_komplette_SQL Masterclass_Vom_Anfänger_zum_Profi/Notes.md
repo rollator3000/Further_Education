@@ -89,6 +89,7 @@ Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Pro
 	- DrawBacks  
 	- 11th Exercise
 18. Full text search  
+	- to_tsvector
 
 
 <br/>
@@ -1480,3 +1481,26 @@ Schreibe eine Funktion, die - anhand einer ID - einen einzelnen Kunden von custo
 <br/>
 
 # (18) Full text search
+- We have learned to use `.. WHERE text LIKE '%..%'` to search a column for text, but there is not much space for optimization...  
+- Text columns often contain useless words / too much information   
+- Stemming: Go from plural to singluar *(Bücher -> Buch, ...)*  
+- Full-text search is not trivial and we can use 'Hadoop', 'Spark' or 'Elastic Search' for optimization.  
+
+Example: 'shakespeare' contains all sentences of 'Romeo & Julia' and we search for sentences with 'Romeo' in it:  
+
+	SELECT * FROM shakespeare WHERE contents LIKE '%Romeo%'  
+<br/>
+&rarr; This is pretty slow + doesn't apply any processing as stemming/ to lower / ...  
+
+## to_tsvector
+Function to process text data *(stemming, to lower, rm stopwords, ...)* & optimize it for search *(words get indices)* - has the form of `to_tsvector(Languane, Text)`:  
+
+	SELECT to_tsvector('english', 'world berlin germany')
+<br/>
+&rarr; This returns a mapping of: 'world': 1, 'berlin': 2, 'german': 3    
+<br/> 
+
+	SELECT to_tsvector('german', 'Das Smartphone ist bestes')
+<br/>
+&rarr; This returns a mapping of: 'smartphone': 2, 'beste': 4  
+<br/> 
