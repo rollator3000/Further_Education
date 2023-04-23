@@ -90,7 +90,10 @@ Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Pro
 	- 11th Exercise
 18. Full text search  
 	- to_tsvector
-
+	- Querying
+		- Ranking search results
+		- Saving ts_vector
+19. Execute functions automatically
 
 <br/>
 
@@ -1504,3 +1507,76 @@ Function to process text data *(stemming, to lower, rm stopwords, ...)* & optimi
 <br/>
 &rarr; This returns a mapping of: 'smartphone': 2, 'beste': 4  
 <br/> 
+
+## Querying
+`@@` is used as search symobl - the first argument 
+
+	SELECT to_tsvector('german', 'Buch Smartphone') @@ 'buch' -> Returns True
+<br/>
+
+	SELECT to_tsvector('german', 'Buch Smartphone') @@ 'BUCH' -> Returns False
+<br/>
+
+It's important to apply the same processing to the data we query with `to_tsquery` & so we can avoid such issues.  
+
+	SELECT to_tsvector('german', 'Buch Smartphone') @@ to_tsquery('german', 'BUCH') -> Returns True
+<br/>
+
+Instead of direct values, we can also pass a column as second argument - e.g. get all rows where 'char_col_1' contains 'Romeo'.  
+
+	SELECT * FROM data
+		to_tsvector('english', char_col_1) @@ to_tsquery('english', 'Romeo')
+<br/>
+
+This query is quite slow, as all values in 'char_col_1' have to be processed... to speed it up, we can create an index for it:  
+
+	SELECT * FROM data
+		to_tsvector('english', char_col_1) @@ to_tsquery('english', 'Romeo')
+		CREATE INDEX index_col_name ON data
+			USING GIN(to_tsvector('english', char_col_1))
+<br/>
+
+We can also pass multiple words into `to_tsquery`:  
+
+	@@ to_tsquery('egnlish', 'Romeo & Julia') # -> Texts that contain 'Romeo' & 'Julia'
+<br/>
+
+	@@ to_tsquery('egnlish', 'Romeo | Julia') # -> Texts that contain either 'Romeo', 'Julia' or both
+<br/>
+
+	@@ to_tsquery('egnlish', '(Romeo | Julia) & Gutenberg') # -> Texts that contain either 'Romeo', 'Julia' or both AND 'Gutenberg'  
+<br/>	
+
+### Ranking search results
+Find the book of shakespeare that contains the word 'love' the most with `ts_rank`:  
+
+	SELECT *, ts_rank(to_tsvector('english', book_texts), plain_tsquery('enlgish', 'love')) AS score
+	FROM shakespeare
+	WHERE to_tsvector('english', book_texts)  @@ plain_tsquery('enlgish', 'love')
+	ORDER BY score DESC
+<br/> 
+
+We can use `plain_tsquery` multiple times *(as 'search_query')* to only show us the relevant text-passages with `ts_headline`:  
+
+	SELECT *, 
+		ts_rank(to_tsvector('english', book_texts), search_query) AS score, 
+		ts_headline('english', book_texts, search_query) AS headline, 
+	FROM shakespeare, plain_tsquery('enlgish', 'love') AS search_query
+	WHERE to_tsvector('english', book_texts, search_query)
+	ORDER BY score DESC
+<br/>
+
+### Saving ts_vector
+`ts_rank(...)` is slow and is exectued once per search hit, to speed it up *(& search in general)*, we can add `ts_vector(...)` permanently to a DF:
+
+	UPDATE shakespeare SET ts_vec = to_tsvector('english', book_texts)
+<br/>
+
+This takes quite a while & has to be upated, when the values in 'book_texts' change! Queries are sped up:  
+
+	SELECT * FROM shakespeare
+		WHERE ts_vec @@ plainto_tsquery('english', 'Romeo')
+<br/>
+
+# (19) Execute functions automatically
+
