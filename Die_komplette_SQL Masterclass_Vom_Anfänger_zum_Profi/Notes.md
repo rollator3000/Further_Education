@@ -94,6 +94,11 @@ Notes to the Online-Course 'Die komplette SQL Masterclass: Vom Anfänger zum Pro
 		- Ranking search results
 		- Saving ts_vector
 19. Execute functions automatically
+	- Trigger
+	- Meaninful values
+	- VIEW / MATERIALIED VIEW
+	- 12th Exercise
+20. Constraints
 
 <br/>
 
@@ -1579,4 +1584,239 @@ This takes quite a while & has to be upated, when the values in 'book_texts' cha
 <br/>
 
 # (19) Execute functions automatically
+## Trigger
+Automatically run operations, after/ before a UPDATE/ DELETE/ INSERT/ TRUNCATE - e.g. adjust account balances during a transfer.  
+The code to run automatically after certain operations, can be combined with 'stored procedures'!  
 
+'Blog-Post' example: Everytime we UPDATE an title or content, we want to save the old entrance to 'blog_post_history'.  
+
+	CREATE FUNCTION blog_post_update()
+		RETURN trigger
+		LANGUAGE 'plpgsql'
+		VOLATILE AS $CODE$ BEGIN
+			INSERT INTO blog_post_history (title) VALUE ('Trigger happend');
+			RETURN NEW;
+		END $CODE$
+<br/>
+
+Create the actual trigger now *(AFTER could also be BEFORE; UPDATE could also be INSERT / DELETE)*
+
+	CREATE TRIGGER blog_post_update_trigger()
+		AFTER UPDATE ON blog_post
+			FOR EACH ROW EXECUTE blog_post_update()
+<br/>
+
+Update a title in 'blog_post' --> trigger runs automatically, as UPDATE is applied to 'blog_post' - write 'Trigger happend' to 'blog_post_update_trigger':  
+
+	UPDATE blog_post SET title = "test" WHERE id = 1
+<br/> 
+
+## Meaninful values
+Set meaningful values instead of 'Trigger happend' - w/ NEW.title *(new value after UPDATE was applied)* // OLD.title *(old value before UPDATE was applied)*   
+
+	CREATE FUNCTION blog_post_update()
+		RETURN trigger
+		LANGUAGE 'plpgsql'
+		VOLATILE AS $CODE$ BEGIN
+			INSERT INTO blog_post_history (title) VALUES (NEW.title)
+		END $CODE$
+<br/>
+
+## VIEW / MATERIALIED VIEW
+**VIEW**:  
+- Save a query as a single call - e.g. SELECT * FROM VIEW_CALL  
+- Everytime we call the VIEW, we need to do the calculations again and hence it can be quite slow!  
+<br/>
+
+**MATERIALIED VIEW**: 
+- Syntax as with 'VIEW' but with 'MATERIALIED VIEW' instead
+- Saves the results of the query as an actual table, which makes it faster than VIEW
+- Needs to be updated when the original data changes *(else it will show the old results ;-))*
+<br/>
+Example:
+
+	CREATE VIEW customer.orders_view AS
+		SELECT *,
+			(SELECT SUM(amount) FROM orders WHERE orders.customer_id = customers.id) AS sum_all
+		FROM customers
+<br/>
+
+Now we can call this 'VIEW': `SELECT * FROM customer.orders_view` - analog with 'MATERIALIED VIEW'.  
+
+## 12. Exercise
+customers' hat alle Kunden & für eine Anwendung brauchen wir für jeden Kunden den gesamtem Umsatz - füge dies als extra Spalte zu 'customers' hinzu (Umsatz berechnet sich über 'amount' in 'orders' --> Löse dieses Problem über verschiedene Wege
+
+### (1) Über einen normal VIEW lösen
+
+	CREATE VIEW customers_spent_1 AS 
+	SELECT *,
+	    (SELECT SUM(amount) FROM orders WHERE customers.id = orders.customer_id) AS Totally_Spent
+	FROM customers
+<br/>
+
+	SELECT * FROM customers_spent_1
+<br/>
+
+### (2) Über einen materialized VIEW
+
+	CREATE MATERIALIZED VIEW customers_spent AS 
+	    SELECT *, 
+	        (SELECT SUM(amount) FROM orders WHERE customers.id = orders.customer_id) AS Totally_Spent
+	    FROM customers
+<br/>
+
+	SELECT * FROM customers_spent
+<br/>
+
+### (3) Über einen Trigger - neue Spalte erstellen & immer updaten, wenn sich was bei 'orders' ändert
+#### 3-1 Add a column 'spent_all' to customers 
+
+	ALTER TABLE customers
+	    ADD COLUMN spent_all DECIMAL(10, 2)
+    
+#### 3-2 Fill the values to 'spent_all'
+
+	UPDATE customers 
+	    SET spent_all = (SELECT SUM(amount) FROM orders 
+	                        WHERE orders.customer_id = customers.id)
+    
+#### 3-3 Delete triggers, so we can run the code again 
+
+	DROP TRIGGER IF EXISTS orders_after_insert_trigger ON orders;
+	DROP FUNCTION IF EXISTS orders_after_insert();
+
+#### 3-4 Write a Trigger-Function for when something is inserted in orders
+
+	CREATE FUNCTION orders_after_insert() # -> Must not take any arguments 
+	    RETURNS TRIGGER
+	    LANGUAGE 'plpgsql'
+	    VOLATILE AS $CODE$ BEGIN
+	        UPDATE customers SET spent_all = 
+	            (SELECT SUM(amount) FROM orders 
+	                WHERE orders.customer_id = customers.id)
+	                WHERE customers.id = NEW.customer_id;
+	        RETURN NEW;
+	    END $CODE$;
+
+#### 3-5 Write the trigger itself
+
+	CREATE TRIGGER orders_after_insert_trigger
+	    AFTER INSERT ON orders
+	    FOR EACH ROW EXECUTE PROCEDURE orders_after_insert();
+
+#### 3-6 Check the Trigger-Function
+
+	SELECT * FROM customers WHERE ID = 1
+<br/>
+
+	SELECT * FROM orders WHERE customer_id = 1
+<br/>
+
+	INSERT INTO orders (timestamp, amount, customer_id) 
+    	VALUES (CURRENT_TIMESTAMP, 100, 1)
+<br/>
+
+	SELECT * FROM customers WHERE ID = 1
+
+
+#### 3-7 Delete triggers, so we can run the code again
+
+	DROP TRIGGER IF EXISTS orders_after_delete_trigger ON orders
+<br/>
+
+	DROP FUNCTION IF EXISTS orders_after_delete()
+
+
+#### 3-8 Write a Trigger-Function for when something is deleted in orders
+
+	CREATE FUNCTION orders_after_delete() 
+	    RETURNS TRIGGER
+	    LANGUAGE 'plpgsql'
+	    VOLATILE AS $CODE$ BEGIN
+	        UPDATE customers SET spent_all = 
+	            (SELECT SUM(amount) FROM orders 
+	                WHERE orders.customer_id = customers.id)
+	                WHERE customers.id = OLD.customer_id;
+	        RETURN NEW;
+	    END $CODE$;
+  
+#### 3-9 Write the trigger itself
+
+	CREATE TRIGGER orders_after_delete_trigger
+	    AFTER DELETE ON orders
+	    FOR EACH ROW EXECUTE PROCEDURE orders_after_delete()
+ 
+#### 3-10 Check the Trigger-Function 
+
+	SELECT * FROM customers WHERE ID = 1
+<br/>
+
+	SELECT * FROM orders WHERE customer_id = 1
+<br/>
+
+	DELETE FROM orders WHERE id = 1053
+<br/>
+
+	SELECT * FROM customers WHERE ID = 1
+<br/>
+
+	SELECT * FROM orders WHERE customer_id = 1
+
+
+#### 3-11 Delete triggers, so we can run the code again
+
+	DROP TRIGGER IF EXISTS orders_after_update_trigger ON orders
+<br/>
+
+	DROP FUNCTION IF EXISTS orders_after_update();
+
+#### 3-12 Write a Trigger-Function for when something is updated in orders
+Can be tricky, as there the 'id' in customers could be changed - ensure to cover this scenario with ` WHERE customers.id = NEW.customer_id OR customers.id = OLD.customer_id;`
+<br/>
+
+	CREATE FUNCTION orders_after_update() 
+	    RETURNS TRIGGER
+	    LANGUAGE 'plpgsql'
+	    VOLATILE AS $CODE$ BEGIN
+	        UPDATE customers SET spent_all = 
+	            (SELECT SUM(amount) FROM orders 
+	                WHERE orders.customer_id = customers.id)
+	                WHERE customers.id = NEW.customer_id OR
+	                      customers.id = OLD.customer_id;
+	        RETURN NEW;
+	    END $CODE$;
+
+#### 3-13 Write the trigger itself 
+
+	CREATE TRIGGER orders_after_update_trigger
+	    AFTER UPDATE ON orders
+	    FOR EACH ROW EXECUTE PROCEDURE orders_after_update()
+
+#### 3-14 Check the Trigger-Function 
+	SELECT * FROM customers WHERE ID = 1
+<br/>
+
+	SELECT * FROM orders WHERE customer_id = 1
+<br/>
+
+	UPDATE orders SET amount = 100 WHERE customer_id = 1 
+<br/>
+
+	SELECT * FROM orders WHERE customer_id = 1 
+<br/>
+
+	SELECT * FROM customers WHERE ID = 1
+<br/>
+
+	SELECT * FROM customers WHERE ID in (1, 2)
+<br/>
+
+	UPDATE orders SET customer_id = 2 WHERE customer_id = 1
+<br/>
+
+	SELECT * FROM orders WHERE customer_id in (1,2)
+<br/>
+
+	SELECT * FROM customers WHERE ID in (1, 2) 
+
+# (20) Constraints
