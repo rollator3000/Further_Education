@@ -1,6 +1,5 @@
 # Further Education
-Collection of online-courses, books, etc. I've worked with.  
-To each book/ course there are personal notes, necessary files, as well as exercises & examples.  
+Collection of courses, books, etc. I've worked with - to each there are notes, files, as well as exercises.    
 
 ## Sections
 For each course/ book, there is a seperate folder - each containing code, files & docs.     
@@ -9,7 +8,7 @@ For each course/ book, there is a seperate folder - each containing code, files 
 #### 'Die komplette SQL Masterclass: Vom Anfänger zum Profi'
 	- https://www.udemy.com/course/sql-komplett/
 	- 'MySQL' & 'PostgreSQL' step-by-step w/ examples & exercises
-	- Slides, exercises, data, pictures & notes
+	- Slides, notes, data & pictures   
 
 #### 'Introduction to Databases and SQL Querying'  
 	- https://www.udemy.com/course/introduction-to-databases-and-sql-querying/
