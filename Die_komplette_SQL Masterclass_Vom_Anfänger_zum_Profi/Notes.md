@@ -1820,3 +1820,17 @@ Can be tricky, as there the 'id' in customers could be changed - ensure to cover
 	SELECT * FROM customers WHERE ID in (1, 2) 
 
 # (20) Constraints
+We can use 'Constraints' to validate values - e.g. 'title' must contain at least three letter.  
+'Constraints' can be part of a 'databank' *(complicated)* // 'application logic' *(better suited)*.  
+
+Example: Ensure that 'title' contains at least 3 characters.  
+
+	ALTER databank
+		ADD constraint title_length_const
+		CHECK (LENGTH(title) > 2);
+<br/>
+
+The following UPDATE leads to an error now, as we want to add a title with < 3 characters & violate the constraint
+
+	UPDATE databank SET title 'L' WHERE id = 1  
+<br/>
