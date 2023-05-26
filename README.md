@@ -9,12 +9,14 @@ For each course/ book, there is a seperate folder - each containing code, files 
 	- https://www.udemy.com/course/sql-komplett/
 	- 'MySQL' & 'PostgreSQL' step-by-step w/ examples & exercises
 	- Slides, notes, data & pictures   
-
+  
+#### 'Template'
+	- Template repository with a given folder structure   
+	- Template README.md, Script.R, Script.Py & Script.Rmd files
+  
 #### 'Introduction to Databases and SQL Querying'  
 	- https://www.udemy.com/course/introduction-to-databases-and-sql-querying/
 	- Gentle introduction to SQL with 'Microsoft SQLServer'  
 	- A step by step introduction to the concept of Databases and Introduction to SQL Querying  
 	- For beginners with no experience in databases    
 	- Will make you familiar with SQL Syntax and introduce you to the concept of databases    
-
-### BOOKS
