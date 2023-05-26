@@ -1,0 +1,3 @@
+- Picture-Similarity: https://towardsdatascience.com/measuring-similarity-in-two-images-using-python-b72233eb53c6
+
+- Query stock data with Python: https://ingo-janssen.de/aktienkurse-abfragen-mit-python-schritt-fuer-schritt/
