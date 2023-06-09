@@ -25,7 +25,7 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 - Mathematical operations *(multiplication, addition, division, power off, modulo, ...)*  
 - Variable assigments  
 - Strings  
-- Printing & formatting  
+- Printing & formatting `"Der Durchschnitt der {0} ist {1} Kilometer.".format('Erde', 12345)`    
 - Lists *(append, indexing, list in lists)*  
 
 ### 2.2 Part Two
@@ -78,3 +78,47 @@ def meine_funk(param1='standard'):
 
 meine_funk(param1 = "Deine Mutter")
 ```
+
+### 2.4 Part Four
+- Small functions can be mapped into `lambda()`  
+```
+def mal2(var):
+	return(var * 2)
+
+l_mal2 = lambda var: var * 2
+
+l_mal2(2) --> 4
+mal2(2)   --> 4
+```
+- `map` maps a function to a list of sequence - to see the result we need to convert the result to a list   
+```
+lst = [1,2,3] = [1, 2, 3, 4]
+list(map(lambda var: var * 2, seq)) --> [2, 4, 6, 8]
+```
+- `filter` can be used to filter a list - to see the result we need to convert the result to a list   
+```
+list(filter(lambda x: x % 2 == 0), seq) --> [2, 46
+```
+- Methods are class specific operations *(e.g. for strings, lists, integers, ...)* - example for strings, dictionaries & lists  
+- To get the availabe methods of a element, type '.' and 'tab'  
+```
+st = "Hallo mein Name ist Sam"
+st.lower()                       --> 'hallo mein name ist sam'
+st.upper()                       --> 'HALLO MEIN NAME IST SAM'
+st.split()                       --> ['Hallo', 'mein', 'Name', 'ist', 'Sam']
+'Los Sports! #Sports'.split("#") --> ['Los Sports! ', 'Sports']
+```
+```
+d = {'key1': 'item1', 'key2': 'item2'}
+d.keys()  --> dict_keys(['key1', 'key2'])
+d.items() --> dict_items([('key1', 'item1'), ('key2', 'item2')])
+```
+```
+lst = [1,2,3]
+lst.pop()            --> removes the last element (3)
+'x' in [1,2,3]       --> False
+'x' in ['x','y','z'] --> True
+```
+
+### 1. Exercise - Python Basics  
+- Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/01-Python_Crashkurs/2-Python_Crashkurs_Uebung-Aufgabe.ipynb'    
