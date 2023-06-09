@@ -121,4 +121,14 @@ lst.pop()            --> removes the last element (3)
 ```
 
 ### 1. Exercise - Python Basics  
-- Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/01-Python_Crashkurs/2-Python_Crashkurs_Uebung-Aufgabe.ipynb'    
+- Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/01-Python_Crashkurs/2-Python_Crashkurs_Uebung-Aufgabe.ipynb'     
+- Solutions from the course in: 'Python_für_Finanzanalysen/code/01-Python_Crashkurs/3-Python_Crashkurs_Uebung-Loesung.ipynb'     
+
+<br/>
+<br/>
+
+# (4) NumPy
+Library for linear algebra, data science, etc. in Python - fast as it builds up on 'C'.   
+- In this course mainly used for NumPy-Vectors & -Matrixs  
+ 
+
