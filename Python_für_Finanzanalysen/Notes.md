@@ -130,5 +130,34 @@ lst.pop()            --> removes the last element (3)
 # (4) NumPy
 Library for linear algebra, data science, etc. in Python - fast as it builds up on 'C'.   
 - In this course mainly used for NumPy-Vectors & -Matrixs  
- 
 
+Code to this chapters can be found in 'Python_für_Finanzanalysen/code/02-Numpy/'  
+
+### 2.1 Arrays
+- `np.array([1, 2, 3])` creates an numpy array  
+- `np.array([1, 2, 3], [4, 5, 6])` creates an numpy martix    
+- `np.arange(1, 10)` numpy array from 1 - 9  
+- `np.zeros(3)` // `np.ones(3)` creates an array with 3 0 / 1 values  
+- `np.zeros((3, 3))` // `np.ones((3, 3))` creates an 3x3 matrix with only 0 / 1  
+- `np.linspace(0, 10, x)` x uniformly distributed values between 0 & 10  
+- `np.exe(3)` Unit matrix  
+- `np.random.rand(2)` array with two random values between 0 & 1  
+- `np.random.randint(1, 100, x)` a x integer value(s) between 1 & 99   
+- `array.reshape(5, 5)` convert 'array' into a 5x5 matrix  
+- `.max()`// `.min()` returns the max/ min value of an array  
+- `argmax()`// `argmin()` returns the index of the max/ min value  
+- `.shape` returns the dimensions of a np array / matrix  
+- `.dtype` returns the data type objects in an array  
+
+### 2.2 Indexing  
+Access values in a numpy array/ matrix: `arr = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])`  // `arr_2d = np.array(([5,10,15],[20,25,30],[35,40,45]))`    
+
+- `arr[8]` --> 8  
+- `arr[1:5]` --> array([1, 2, 3, 4])    
+- `.copy()` to copy an array properly, else we might change the values of the orgininal array, when changing the non legit copy *(Broadcasting)*    
+- `arr_2d[1]` returns the second row --> array([20, 25, 30])  
+- `arr_2d[1][0]` // `arr_2d[1,0]` both return 20 - with matrix always [ROW, COLUMN]   
+- `arr_2d[:2,1:]` returns the first 2 rows and skip the first colulm --> array([[10, 15], [25, 30]])   
+- `arr[arr > 5]` --> array([5, 7, 8, 9, 10])   
+
+### 2.3 Operations
