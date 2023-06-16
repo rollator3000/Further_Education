@@ -140,8 +140,8 @@ Code to this chapters can be found in 'Python_für_Finanzanalysen/code/02-Numpy
 - `np.zeros(3)` // `np.ones(3)` creates an array with 3 0 / 1 values  
 - `np.zeros((3, 3))` // `np.ones((3, 3))` creates an 3x3 matrix with only 0 / 1  
 - `np.linspace(0, 10, x)` x uniformly distributed values between 0 & 10  
-- `np.exe(3)` Unit matrix  
-- `np.random.rand(2)` array with two random values between 0 & 1  
+- `np.eye(3)` Unit matrix  
+- `np.random.randn(2)` array with two random values between 0 & 1  
 - `np.random.randint(1, 100, x)` a x integer value(s) between 1 & 99   
 - `array.reshape(5, 5)` convert 'array' into a 5x5 matrix  
 - `.max()`// `.min()` returns the max/ min value of an array  
@@ -160,4 +160,19 @@ Access values in a numpy array/ matrix: `arr = np.array([0, 1, 2, 3, 4, 5, 6, 7,
 - `arr_2d[:2,1:]` returns the first 2 rows and skip the first colulm --> array([[10, 15], [25, 30]])   
 - `arr[arr > 5]` --> array([5, 7, 8, 9, 10])   
 
-### 2.3 Operations
+### 2.3 Operations  
+- Addition / mulitplication of 2 arrays happens elementwise!   
+- Dividing / power of an array happens elementwise as well!  
+- Max/ Min value of an array `arr.max()` / `arr.min()`   
+- `np.sin(arr)` / `np.log(arr)` / `np.exp(arr)` / `np.sqrt(arr)` 
+- `mat.std()` to get the standard deviation of a matrix  
+
+### 2. Exercise - NumPy
+- Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/02-Numpy/4-NumPy_Uebung-Aufgabe.ipynb'     
+- Solutions from the course in: 'Python_für_Finanzanalysen/code/02-Numpy/5-NumPy_Uebung-Loesung.ipynb'       
+
+<br/>
+<br/>
+
+# (5) Pandas
+
