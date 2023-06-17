@@ -175,4 +175,61 @@ Access values in a numpy array/ matrix: `arr = np.array([0, 1, 2, 3, 4, 5, 6, 7,
 <br/>
 
 # (5) Pandas
+- Pandas is an open-source library to work with all types of data  
 
+### 5.1 Series  
+Similiar to an numpy array, but with a name to each value.  
+Create a pd.Series based on a list/ array/ dicitonary:  
+```
+pd.Series(data = [1, 2, 3], index = ['a', 'b', 'c']) # Analog for np.array instead of list - 'index' optional   
+pd.Series({"a":10, "b":20, "c":30})  
+# a    10  
+# b    20  
+# c    30  
+```  
+Working with indexes:  
+```
+# Create two series
+ser1 = pd.Series([1, 2, 3, 4], index=["USA", "Deutschland", "Russland", "Japan"])
+ser2 = pd.Series([1, 2, 5, 4], index=["USA", "Deutschland", "Italien", "Japan"])
+
+# Access values via index:
+ser1["USA"] # --> 1
+
+# Operations are based on the index:   
+ser1 + ser2
+# Deutschland    4.0
+# Italien        NaN
+# Japan          8.0
+# Russland       NaN
+# USA            2.0
+```
+
+### 5.2 DataFrames I   
+DataFrames are basically a collection of pd.Series that form a DF together.  
+
+Create a DF with random numerics, the col-names W, X, Y, Z & row-names A, B, C, D, E:  
+`df = pd.DataFrame(randn(5, 4), index = 'A B C D E'.split(), columns = 'W X Y Z'.split())`  
+![](notes_images/pd-DF.png)  
+<br/>
+
+- Access a column via it's col-name: `df['W']` // `df[['W', 'X']]`  
+- Add a column:  `df['new'] = df['W'] * 4 + df['X']`  
+- Remove a column: `df.drop('new', axis = 1, inplace = True)` - w/o 'inplace = T' the col is only deleted temporarily  
+- Remove a row: `df.drop('E', axis = 0, inplace = True)`   
+- Select a row: `df.loc['A']` // `df.iloc[0]`  
+- Get a certain value in a DF:  `df.loc['B', 'Y']` // `df.iloc[1, 2]`    
+- Get a subset from a DF: `df.loc[['A', 'B'], ['W', 'Y']]` // `df.iloc[[1, 2], [3, 4]]`  
+- **With .iloc - as always ROWS -> COLS**  
+
+### 5.3 DataFrames II  
+- Conditional selection: `df > 0` -> Returns a DF that has True/ False in each cell  
+- Get the DF with values > 0 in 'W': `df[df['W'] > 0]`  
+- Get the columns 'X' & 'Y' in the DF with values > 0 in 'W': `df[df['W'] > 0][['X', 'Y']]`  
+- Multiple conditions must be combined with '()': `df[(df['W']>0) & (df['Y'] > 1)]` // `df[(df['W']>0) | (df['Y'] > 1)]`   
+<br/>
+
+- Resetting the index: `df.reset_index()` - current index as column 'index' + new index with 0, 1, 2, ...  
+- Use a existing column as index: `df.set_index('X')`  
+
+### 5.4 DataFrames III  
