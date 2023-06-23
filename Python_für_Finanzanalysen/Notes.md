@@ -230,6 +230,60 @@ Create a DF with random numerics, the col-names W, X, Y, Z & row-names A, B, C, 
 <br/>
 
 - Resetting the index: `df.reset_index()` - current index as column 'index' + new index with 0, 1, 2, ...  
-- Use a existing column as index: `df.set_index('X')`  
+- Use a existing column as index: `df.set_index('X', inplace = T)`  
 
 ### 5.4 DataFrames III  
+Multi-Index und Index Hierarchie - creation of multi-index:  
+```
+außen      = ['G1','G1','G1','G2','G2','G2']
+innen      = [1,2,3,1,2,3]
+hier_index = list(zip(außen,innen))
+hier_index = pd.MultiIndex.from_tuples(hier_index)  
+df         = pd.DataFrame(np.random.randn(6,2), index = hier_index, columns = ['A','B'])
+```
+![](notes_images/pd-index.png)   
+
+- Assign index names: `df.index.names = ['Gruppe','Num']` --> G1 & G2 have index-name 'Gruppe' & 1,2,3 'Num'  
+- Access values: 
+    - `df.loc['G1'].loc[1]` --> return index '1' for the in 'G1'    
+    - `df.xs('G1')` # --> Return 'G1' values  
+    - `df.xs(['G1', 1])` --> return index '1' for the in 'G1'   
+    - `df.xs(1, level = "Num")` --> Return the rows with '1' in index 'Num'  
+  
+
+### 5.5 Missing Data  
+Common issue due to technical issues, motivation, ...   
+```
+df = pd.DataFrame({'A':[1,2,np.nan],
+                  'B':[5,np.nan,np.nan],
+                  'C':[1,2,3]})
+```
+![](notes_images/pd-missing.png)  
+
+- Remove missing values:  
+    - `df.dropna()` --> Only keep rows w/o any NA's
+    - `df.dropna(axis=1)` --> Only keep cols w/o any NA's  
+    - `df.dropna(thresh=2)` --> Only drop rows with >= 2 NA's  
+
+- Imputation:  
+    - `df.fillna(value='Füllwert')` --> fill missing values with 'Füllwert' *(analog with any other value)*  
+    - `df['A'].fillna(value=df['A'].mean())` --> Fill the missing values in 'A' with it's average  
+  
+### 5.6 Group By  
+```
+data = {'Firma':['GOOG','GOOG','MSFT','MSFT','FB','FB'],
+       'Person':['Sam','Charlie','Amy','Vanessa','Carl','Sarah'],
+       'Sales':[200,120,340,124,243,350]}
+df = pd.DataFrame(data)
+```
+![](notes_images/pd-groupby.png)  
+
+Use group-by to apply functions *(sum, mean, ..)* for sub-groups in the data *(e.g. 'Firma')*
+
+`df.groupby('Firma').mean()` --> Get the mean-sale value for each company *(analog for sum, std, min, max, count, describe, ...)*  
+    - 'describe' equals 'summary' in R & returns min, 25%, ..., max  
+    - 'groupby' groups the data by a column & applies the calculations to the sub-groups seperatly  
+
+### 5.7 Merge, Join, Concatenate
+
+
