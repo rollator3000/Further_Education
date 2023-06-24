@@ -285,5 +285,6 @@ Use group-by to apply functions *(sum, mean, ..)* for sub-groups in the data *(e
     - 'groupby' groups the data by a column & applies the calculations to the sub-groups seperatly  
 
 ### 5.7 Merge, Join, Concatenate
-
+Data Frames zusammenzuführen:  
+![](notes_images/pd-groupby.png)  
 
