@@ -339,6 +339,7 @@ Data Frames zusammenzuführen:
 
 #### Pivotieren  
 ![](notes_images/pd-pivot.png)   
+- Use the columns 'A' & 'B' as columns, 'C' as values for columns & values itself from 'D'  
 
 ### 5.9 Exercise - Pandas
 - Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/03-Pandas/09-Pandas_Uebung_Aufgabe.ipynb'       
