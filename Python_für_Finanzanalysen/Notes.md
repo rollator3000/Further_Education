@@ -5,9 +5,11 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 ## Overview
 
 1. Jupyter Notebook SetUp
-2. Python Crashkurs
-	- 
-	- 
+2. Material & Set up
+3. Python Crashkurs
+4. Numpy
+5. Pandas 
+6. MatplotLib  
 
 <br/> 
 
@@ -18,17 +20,17 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 - '00-Installation-Finanz-Packete/00-PythonFinance-PipInstallation-Abhaengigkeiten.ipynb'
 - Run it to install all packages needed for this course
 
-# (2) Python Crashkurs
+# (3) Python Crashkurs
 - Corresponding JupyterNotebook: 'Python_für_Finanzanalysen/code/01-Python_Crashkurs/1-Python_Crashkurs_Teil_1-4.ipynb'  
 
-### 2.1 Part One
+### 3.1 Part One
 - Mathematical operations *(multiplication, addition, division, power off, modulo, ...)*  
 - Variable assigments  
 - Strings  
 - Printing & formatting `"Der Durchschnitt der {0} ist {1} Kilometer.".format('Erde', 12345)`    
 - Lists *(append, indexing, list in lists)*  
 
-### 2.2 Part Two
+### 3.2 Part Two
 - Dictionaries *(key-item pairs, item could also be a list/ dictionary/ ...)*  
 ```
 d = {'key1':'item1','key2':'item2'} 
@@ -56,7 +58,7 @@ else:
     print('Zuletzt')
 ``` 
 
-### 2.3 Part Three
+### 3.3 Part Three
 - For loops  
 - While loops  
 - range *(range(from [incl.], to [excl.]))*  
@@ -79,7 +81,7 @@ def meine_funk(param1='standard'):
 meine_funk(param1 = "Deine Mutter")
 ```
 
-### 2.4 Part Four
+### 3.4 Part Four
 - Small functions can be mapped into `lambda()`  
 ```
 def mal2(var):
@@ -120,7 +122,7 @@ lst.pop()            --> removes the last element (3)
 'x' in ['x','y','z'] --> True
 ```
 
-### 1. Exercise - Python Basics  
+### 3.5 Exercise - Python Basics  
 - Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/01-Python_Crashkurs/2-Python_Crashkurs_Uebung-Aufgabe.ipynb'     
 - Solutions from the course in: 'Python_für_Finanzanalysen/code/01-Python_Crashkurs/3-Python_Crashkurs_Uebung-Loesung.ipynb'     
 
@@ -133,7 +135,7 @@ Library for linear algebra, data science, etc. in Python - fast as it builds up 
 
 Code to this chapters can be found in 'Python_für_Finanzanalysen/code/02-Numpy/'  
 
-### 2.1 Arrays
+### 4.1 Arrays
 - `np.array([1, 2, 3])` creates an numpy array  
 - `np.array([1, 2, 3], [4, 5, 6])` creates an numpy martix    
 - `np.arange(1, 10)` numpy array from 1 - 9  
@@ -149,7 +151,7 @@ Code to this chapters can be found in 'Python_für_Finanzanalysen/code/02-Numpy
 - `.shape` returns the dimensions of a np array / matrix  
 - `.dtype` returns the data type objects in an array  
 
-### 2.2 Indexing  
+### 4.2 Indexing  
 Access values in a numpy array/ matrix: `arr = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])`  // `arr_2d = np.array(([5,10,15],[20,25,30],[35,40,45]))`    
 
 - `arr[8]` --> 8  
@@ -160,14 +162,14 @@ Access values in a numpy array/ matrix: `arr = np.array([0, 1, 2, 3, 4, 5, 6, 7,
 - `arr_2d[:2,1:]` returns the first 2 rows and skip the first colulm --> array([[10, 15], [25, 30]])   
 - `arr[arr > 5]` --> array([5, 7, 8, 9, 10])   
 
-### 2.3 Operations  
+### 4.3 Operations  
 - Addition / mulitplication of 2 arrays happens elementwise!   
 - Dividing / power of an array happens elementwise as well!  
 - Max/ Min value of an array `arr.max()` / `arr.min()`   
 - `np.sin(arr)` / `np.log(arr)` / `np.exp(arr)` / `np.sqrt(arr)` 
 - `mat.std()` to get the standard deviation of a matrix  
 
-### 2. Exercise - NumPy
+### 4.4 Exercise - NumPy
 - Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/02-Numpy/4-NumPy_Uebung-Aufgabe.ipynb'     
 - Solutions from the course in: 'Python_für_Finanzanalysen/code/02-Numpy/5-NumPy_Uebung-Loesung.ipynb'       
 
@@ -286,5 +288,63 @@ Use group-by to apply functions *(sum, mean, ..)* for sub-groups in the data *(e
 
 ### 5.7 Merge, Join, Concatenate
 Data Frames zusammenzuführen:  
-![](notes_images/pd-groupby.png)  
 
+#### Concat  
+![](notes_images/pd-merge.png)
+- Merge DF's on their columns/ rows  
+- `pd.concat([df1,df2,df3])` merges the data column-wise *(based on colnames)*    
+- `pd.concat([df1,df2,df3], axis = 1)` merges the data row-wise *(based on row-names - non matching row-names are filled with NA)*  
+
+#### Merge
+![](notes_images/pd-merge2.png)  
+- Merge DF's based on matching values in a given column  
+- `pd.merge(links,rechts,how='inner',on='key1')` merges the DFs row-wise based on matching values in the column 'key' in both DFs - non matching rows are filled with NaN  
+- `pd.merge(links, rechts, on=['key1', 'key2'])` merges the DFs row-wise based on matching values in their columns 'key1' & 'key2' - non matching rows are not part of the DF!  
+- `pd.merge(links, rechts, how = 'outer', on=['key1', 'key2'])` merges the DFs row-wise based on matching values in their columns 'key1' & 'key2' - non matching rows are still part of the DF but filled with NaN  
+- `pd.merge(links, rechts, how = 'right', on=['key1', 'key2'])` use all rows in 'rechts' and adds only matching rows from 'links' to it based on key1 & key2  
+- `pd.merge(links, rechts, how = 'left', on=['key1', 'key2'])` use all rows in 'links' and adds only matching rows from 'rechts' to it based on key1 & key2    
+
+#### Join  
+![](notes_images/pd-merge3.png)  
+- Row-Wise binding of DFs  
+- `links.join(rechts)` use the DF 'links' and merge all columns from 'rechts' that match in the row-names - rows in 'links' unmatchable with right have NaN in new columns  
+- `links.join(rechts, how = 'outer')` bind the DF's row-wise - all non matching rows from 'links'/ 'rechts' are filled with NaN
+
+### 5.8 Operations  
+![](notes_images/pd-operations.png)  
+
+#### Unique Values  
+- Unique values in a col: `df['spa2'].unique()`  
+- Amount of unique values in a col: `df['spa2'].nunique()`   
+- Get frequencies of unique values in a col: `df['spa2'].value_counts()`  
+
+#### Select data
+`newdf = df[(df['spa1']>2) & (df['spa2']==444)]` - only keep rows that full-fil both conditions - single conditions must be in brackets!  
+
+#### Apply functions  
+- Define a function: `def mal2(x): return x*2`   
+- Apply it to each value of a col: `df['spa1'].apply(mal2)` // `df['spa3'].apply(len)`   
+- Get sum over whole column: `df['spa1'].sum()`  
+
+#### Col & Index functions  
+- Remove a column: `del df["spa1"]`  
+- Get col-names: `df.columns`  
+- Get row-names: `df.index`  
+- Order a DF by a given column: `df.sort_values(by='spa2')`  
+
+#### NullValues
+- Check each row for NaN's: `df.isnull()`  
+- Remove rows with at least a missing value: `df.dropna()`   
+- Fill missing values with 'FILL': `df.fillna('FILL')`  
+
+#### Pivotieren  
+![](notes_images/pd-pivot.png)   
+
+### 5.9 Exercise - Pandas
+- Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/03-Pandas/09-Pandas_Uebung_Aufgabe.ipynb'       
+- Solutions from the course in: 'Python_für_Finanzanalysen/code/03-Pandas/10-Pandas_Uebung_Loesung.ipynb'         
+
+<br/>
+<br/>
+
+# (6) MatplotLib  
