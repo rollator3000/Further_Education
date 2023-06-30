@@ -348,4 +348,174 @@ Data Frames zusammenzuführen:
 <br/>
 <br/>
 
-# (6) MatplotLib  
+# (6) MatplotLib
+Introduction to visualisations with MatplotLib & Pandas.  
+
+### 6.1 Matplotlib I + II + III  
+Library for 2- & 3-D graphics - import of the package as `import matplotlib.pyplot as plt`.  
+
+#### Regular Plot
+```
+x = [1, 2, 3, 4, 5]
+y = x**2
+plt.plot(x, y)    # Plot x vs. y as line-diagramm
+plt.xlabel("lol") # Add x-lab
+plt.ylabel("xD")  # Add y-lab
+plt.title("rofl") # Add a title
+plt.plot()        # Plot the object
+```
+#### Subplots
+```
+# plt.subplot(AmountOfRows, AmountOfCols, PlotNr)
+plt.subplot(1,2,1)    # Start with the 1. plot in [1x2 plot]
+plt.plot(x, y, 'r--') # x vs y as linechart in reg 
+plt.subplot(1,2,2)    # Select the next plot in [1x2 plot]
+plt.plot(y, x, 'g*-') # Plot y vs x as linechart in green
+plt.show()
+```
+
+#### Object Oriented
+```
+af = plt.figure()                        # Empty WorkingSpace to plot into  
+axes = af.add_axes([0.1, 0.1, 0.8, 0.8]) # inks, unten, breite, höhe in [0 & 1]
+axes.plot(x, y, 'b')                     # Plot x vs y in blue   
+axes.set_xlabel('X Label definieren')    # Add x and y-axis lab
+axes.set_ylabel('Y Label definieren')
+axes.set_title('Titer definieren')       # Add a title
+```
+
+#### Object Oriented - Plot in Plot  
+```
+af    = plt.figure()                      # Empty WorkingSpace to plot into  
+axes1 = af.add_axes([0.1, 0.1, 0.8, 0.8]) # Main Axis
+axes2 = af.add_axes([0.2, 0.5, 0.4, 0.3]) # Next Axis - changing values here will replace the smaller plot within the bigger one  
+
+# Create the first bigger plot around 'axes1'
+axes1.plot(x, y, 'b')
+axes1.set_xlabel('x Beschriftung Achse 1')
+axes1.set_ylabel('y Beschriftung Achse 1')
+axes1.set_title('Großes Diagramm')
+
+# Create the first bigger plot around 'axes2'
+axes2.plot(y, x, 'r')
+axes2.set_xlabel('x Beschriftung Achse 2')
+axes2.set_ylabel('y Beschriftung Achse 2')
+axes2.set_title('Eingesetztes Diagramm')
+
+af.show()
+```
+
+#### Subplots
+```
+# Create a layout for two plots in 1 row & 2 cols  
+diag, axes = plt.subplots(nrows = 1, ncols = 2) 
+
+# Plot data into the layout
+for ax in axes:
+    ax.plot(x, y)
+
+# Access single plots
+axes[0].plot(x, y) 
+
+# Add more Information to the plots with:
+- '.set_xlabel("x lab")'
+- '.set_ylabel("y lab")'
+- '.set_title("title")'
+```
+
+#### Size of plots
+```
+diag = plt.figure(figsize=(8,4),  # Height & Width of plot
+                  dpi= 100)       # Pixel per inch (aka resolution)  
+
+ax = diag.add_axes([0,0,1,1])     # Create the actual plot
+ax.plot(x,y)
+```
+
+#### Safe Plots
+```
+diag.savefig("filename.jpeg", # Path and name 
+             dpi = 200)       # Resolution
+```
+
+#### Add Legends  
+```
+diag = plt.figure()
+ax   = diag.add_axes([0,0,1,1])
+
+ax.plot(x, x**2, label="x**2") # Add LinePlot x vs x^2 and add a label
+ax.plot(x, x**3, label="x**3") # Add LinePlot x vs x^3 and add a label
+ax.legend(loc = 1)             # Position of the legend
+```
+
+#### Colours 
+**MatLab Style**  
+```
+diag, ax = plt.subplots()
+ax.plot(x, x**2, 'b.-') # blaue Linie mit Punkten
+ax.plot(x, x**3, 'g--') # grüne gestrichelte Linie
+```
+
+**ColorParameter**  
+```
+diag, ax = plt.subplots()
+
+ax.plot(x, x+1, color="blue", alpha=0.5) # Transparancy = 50%
+ax.plot(x, x+2, color="#8B008B")         # RGB Hex Code
+ax.plot(x, x+3, color="#FF8C00")         # RGB Hex Code 
+```
+
+#### Linetypes  
+- Line strength with `linewidth` / `lw`  
+- Line style with `linestyle` / `ls` 
+
+```
+diag, ax = plt.subplots(figsize=(12,6))
+
+# Different LineWidths
+ax.plot(x, x+1, color="red", linewidth=0.25)
+ax.plot(x, x+2, color="red", linewidth=0.50)
+ax.plot(x, x+3, color="red", linewidth=1.00)
+ax.plot(x, x+4, color="red", linewidth=2.00)
+
+# Different LineStyles (‘-‘, ‘–’, ‘-.’, ‘:’, ‘steps')
+ax.plot(x, x+5, color="green", lw=3, linestyle='-')
+ax.plot(x, x+6, color="green", lw=3, ls='-.')
+ax.plot(x, x+7, color="green", lw=3, ls=':')
+
+# Different Marker ('+', 'o', '*', 's', ',', '.', '1', '2', '3', '4', ...)  
+ax.plot(x, x+ 9, color="blue", lw=3, ls='-', marker='+')
+ax.plot(x, x+10, color="blue", lw=3, ls='--', marker='o')
+ax.plot(x, x+11, color="blue", lw=3, ls='-', marker='s')
+ax.plot(x, x+12, color="blue", lw=3, ls='--', marker='1')
+
+# Different Marker Size & Colors 
+ax.plot(x, x+13, color="purple", lw=1, ls='-', marker='o', markersize=2)
+ax.plot(x, x+14, color="purple", lw=1, ls='-', marker='o', markersize=4)
+ax.plot(x, x+15, color="purple", lw=1, ls='-', marker='o', markersize=8, markerfacecolor="red")
+ax.plot(x, x+16, color="purple", lw=1, ls='-', marker='s', markersize=8, markerfacecolor="yellow", markeredgewidth=3, markeredgecolor="green");
+```
+
+#### Range of values  
+```
+diag, axes = plt.subplots(1, 3, figsize=(12, 4))
+
+axes[0].plot(x, x**2, x, x**3)
+axes[0].set_title("Standard Achsen")
+
+axes[1].plot(x, x**2, x, x**3)
+axes[1].axis('tight')
+axes[1].set_title("Enge Achsen")
+
+axes[2].plot(x, x**2, x, x**3)
+axes[2].set_ylim([0, 60])  # Set the value are manually
+axes[2].set_xlim([2, 5])    
+axes[2].set_title("Benutzerdefiniert")
+```
+
+#### Special Diagramms  
+Special diagramms you should know exist - details can be looked up if needed:  
+
+- ScatterPlot: `plt.scatter(x,y)`  
+- Histogram: `plt.hist(data)`  
+- BoxPlot: `plt.boxplot(data, vert = True, patch_artist = True)`
