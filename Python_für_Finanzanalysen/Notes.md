@@ -9,7 +9,7 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 3. Python Crashkurs
 4. Numpy
 5. Pandas 
-6. MatplotLib  
+6. MatplotLib + Pandas Vizualisation  
 
 <br/> 
 
@@ -520,5 +520,9 @@ Special diagramms you should know exist - details can be looked up if needed:
 - Histogram: `plt.hist(data)`  
 - BoxPlot: `plt.boxplot(data, vert = True, patch_artist = True)`
 
-
 ### 6.2 Exercise - MatplotLib  
+- Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/04_Visualisierungen_mit_Matplotlib_und_Pandas/2-Matplotlib_Uebung-Aufgabe.ipynb'       
+- Solutions from the course in: 'Python_für_Finanzanalysen/code/04_Visualisierungen_mit_Matplotlib_und_Pandas/3-Matplotlib_Uebung-Loesung.ipynb'  
+
+### 6.3 Pandas Vizualisation  
+
