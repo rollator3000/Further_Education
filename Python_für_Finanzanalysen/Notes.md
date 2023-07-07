@@ -519,3 +519,6 @@ Special diagramms you should know exist - details can be looked up if needed:
 - ScatterPlot: `plt.scatter(x,y)`  
 - Histogram: `plt.hist(data)`  
 - BoxPlot: `plt.boxplot(data, vert = True, patch_artist = True)`
+
+
+### 6.2 Exercise - MatplotLib  
