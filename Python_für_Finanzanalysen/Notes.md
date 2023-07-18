@@ -10,6 +10,7 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 4. Numpy
 5. Pandas 
 6. MatplotLib + Pandas Vizualisation  
+7. Datasources  
 
 <br/> 
 
@@ -549,4 +550,35 @@ Integrated methods for plotting in pandas.
 <br/>
 <br/>
 
-# (6) MatplotLib
+# (7) Data sources  
+Financial data can be accessed via 'Pandas-DataReader' *(use API's to get the relevant data)* or 'Quandl' *(up to 50 requests per day for free)*.  
+For exercises the data is also supplied as '.csv', ...  
+Install following packages into your enviroment: `conda install sqlalchemy`, `conda install lxml`, `conda install html5lib` & `conda install BeautifulSoup4`  
+
+### 7.1 CSV  
+`pwd` to get the current python working directory.  
+- `df = pd.read_csv('example.csv')` uses first row as header and adds a row-index automatically  
+- `df.to_csv('saved.csv')` to save a csv *(by default inclusive the row-index)*  
+
+### 7.2 Excel  
+- `df = pd.read_excel('Excel_Sample.xlsx', sheetname = 'Sheet1')` to read in the 'Sheet1' of the file  
+- `df.to_excel("My_Excel.xlsx", sheetname = 'Shieeet1')`  
+
+### 7.3 HTML  
+- `df = pd.read_html('http://www.fdic.gov/ban/individual/failedd/banlist.html')` reads all tables from the link and safes them into a list  
+
+### 7.4 SQL  
+- Different data SQL-banks *(Postgres, MySQL, Oracle, ...)* that all need an own 'connector'  
+```
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///:memory:')  
+
+df.to_sqwl("Daten", engine)             # To save data into a SQL-Engine
+df = pd.read_sql("Daten", con = engine) # To read in a file from a SQL-Engine  
+```
+
+### 7.5 JSON
+- JSON-object consists of key-value pairs and is commonly used - after the loading it has the type 'dict'.  
+- To create a dataframe from the dictionary: `df = DataFrame(data['diet'])`  
+
+### 7.6 Pandas Data-Reader
