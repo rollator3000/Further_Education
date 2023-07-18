@@ -20,6 +20,8 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 - '00-Installation-Finanz-Packete/00-PythonFinance-PipInstallation-Abhaengigkeiten.ipynb'
 - Run it to install all packages needed for this course
 
+# (2) Material & Set up  
+
 # (3) Python Crashkurs
 - Corresponding JupyterNotebook: 'Python_für_Finanzanalysen/code/01-Python_Crashkurs/1-Python_Crashkurs_Teil_1-4.ipynb'  
 
@@ -525,4 +527,26 @@ Special diagramms you should know exist - details can be looked up if needed:
 - Solutions from the course in: 'Python_für_Finanzanalysen/code/04_Visualisierungen_mit_Matplotlib_und_Pandas/3-Matplotlib_Uebung-Loesung.ipynb'  
 
 ### 6.3 Pandas Vizualisation  
+Integrated methods for plotting in pandas.  
 
+- Adjsut the style of such plots with Matplotlib via `plt.style.use('ggplot')` (or 'bmh', 'dar_background', ...)   
+- `df['A'].hist(bins = 50)` to create a historgram of the column 'A'     
+- `df.plot.area(alpha = 1)` line diagramm with filled area for each of the columns in 'df' *(row-id = x-axis)*  
+- `df.plot.bar(stacked = F)` barplot colored by each column in 'df' *(row-id = x-axis)*  
+- `df.plot.line(x = df.index, y = 'B')` for a regular line-plot *(e.g. over time)*  
+    - `lw` & `figsize` can be modified  
+- `df.plot.scatter(x = 'A', y = 'B', c = 'C')` scatter plot with colors according to 'C'  
+    - Size of points can also be regulated with 's' *(either fix or indivdual for each obs)*  
+- `df.plot.box` do a boxplot for each column in 'df'  
+- Hexagon plot *(x-y map divided into equally sized hexagons)* via `df.plot.hexbin(x = 'A', y = 'B', gridsize = 25)`  
+- Kernel-Density estimation via `df['A'].plot.kde()` // `df['A'].plot.density()`  
+    - 'density' can be applied to multiple columns at once  
+
+### 6.4 Exercise - Pandas Vizualisations  
+- Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/04_Visualisierungen_mit_Matplotlib_und_Pandas/5-Pandas_Data_Visualization_Uebung-Aufgabe.ipynb'         
+- Solutions from the course in: 'Python_für_Finanzanalysen/code/04_Visualisierungen_mit_Matplotlib_und_Pandas/6-Pandas_Data_Visualization_Uebung-Loesung.ipynb'           
+
+<br/>
+<br/>
+
+# (6) MatplotLib
