@@ -9,8 +9,9 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 3. Python Crashkurs
 4. Numpy
 5. Pandas 
-6. MatplotLib + Pandas Vizualisation  
+6. MatplotLib & Pandas Vizualisation  
 7. Datasources  
+8. Pandas & DataSeries
 
 <br/> 
 
@@ -581,4 +582,90 @@ df = pd.read_sql("Daten", con = engine) # To read in a file from a SQL-Engine
 - JSON-object consists of key-value pairs and is commonly used - after the loading it has the type 'dict'.  
 - To create a dataframe from the dictionary: `df = DataFrame(data['diet'])`  
 
-### 7.6 Pandas Data-Reader
+### 7.6 YFINANCE  
+Package to get the stock-data
+```
+import datetime as dt
+import yfinance as yf
+
+company = 'aapl'
+start   = dt.datetime(2020,1,1)
+end     = dt.datetime(2022,1,1)
+
+data = yf.download(company, start , end)
+data.tail(10)
+```  
+
+### 7.7 NasdaqDatalink
+```
+import nasdaqdatalink
+mydata = nasdaqdatalink.get("FRED/GDP")
+```
+
+<br/>
+<br/>
+
+# (8) Pandas & DataSeries
+
+### 8.1 Intro
+TimeSeries are a special type of data over time that need speical functions & methods
+
+### 8.2 DateTimeIndex
+- DateTime is mostly used as index and not in a seperate column  
+- `datetime.datetime(year, month, day)` to create a date
+- `datetime.datetime(year, month, day, hour, minute, second)` to create a date-time  
+- The date/ date-time elements have own methods *(e.g. hour, timezone, ...)*  
+- We can set a time as index in a pd-DF with: `pd.DatetimeIndex(DateTimeList)`  
+
+```
+# Create a DF with date-time index
+data       = [1, 2, 3, 4]
+data_index = [datetime.datetime(2023, 1, 1), datetime.datetime(2023, 1, 2)]
+col_names  = ['Col1', 'Col2']
+df         = pd.DataFrame(data, data_index, col_names)
+
+# DF has 2 columns 'Col1' & 'Col2' + 1.1.2023 & 2.1.2023 as index values
+
+df.index.max()    # --> to get the max value of the index
+df.index.argmax() # --> get the index of the max index
+```
+
+## 8.3 TimeResampling aka Wiederholte Stichproben
+- Useful to aggregate dates by e.g. months, quartals, ... 
+- `df.info()` to get the datatypes of all columns *(as 'str' in R)* 
+- Convert str into date: `pd.to_datetime(df['Date'], format = "%d-%m-%Y")`  
+- Set a column as index: `df.set_index('ColName', inplace = T)`
+- `df.resample(rule = "Q")` slice the data into its quartals and then get their mean/ max/ ... `df.resample(rule = "Q").mean()`
+    - 'A' for yearly results
+    - 'Q' for quarterly results
+    - 'BQ' for business quartals
+
+## 8.4 Time-Shifting
+- Sometimes dates have to be shifted into the future/ past
+- `df.shift(1)` move all values down by 1 row
+- `df.shift(-1)` move all values up by 1 row
+- `df.tshift(periods = 1, freq = 'A')` shift all dates in the index by 1 month  
+
+## 8.5 Rolling and Expanding  
+- Calculate a rolling mean, max, ... all in the time-area of e.g. 7 days
+- `df.rolling(7).mean()` to calculate the mean over a span of 7 days
+```
+df['Open_Mean'] = df.rolling(window = 7).mean()
+
+# Plot both lines - 'Open_Mean' is the moving average and much smoother!
+df[['Open', 'Open_Mean']].plot(figsize = (16, 6))
+```
+- `df['Close'].expanding(min = periods = 1).mean()` to get the mean values from start to each time-point!  
+
+## 8.6 Bollinger Bands
+- Volitity-Bands that are placed to a moving average and depend on the standard deviation of the data
+- Bands get wider, when the standard deviation of the data gets bigger y vic versa  
+- Bands cover ~99% of all prices -> cheap prices, when the curse is below a BollingerBand & expensive, when it's above
+```
+# 20-Day-Moving-Average
+df['20_day_mean'] = df['Close'].rolling(window=20).mean()
+df['Upper']       = df['20_day_mean'] + 2 * df['Close'].rolling(window=20).std()
+df['Lower']       = df['20_day_mean'] - 2 * df['Close'].rolling(window=20).std()
+
+df[['20_day_mean', 'Upper', 'Lower']].plot()
+```
