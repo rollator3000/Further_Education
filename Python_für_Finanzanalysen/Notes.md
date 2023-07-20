@@ -12,6 +12,7 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 6. MatplotLib & Pandas Vizualisation  
 7. Datasources  
 8. Pandas & DataSeries
+9. Stock-Analysis Project
 
 <br/> 
 
@@ -669,3 +670,12 @@ df['Lower']       = df['20_day_mean'] - 2 * df['Close'].rolling(window=20).std()
 
 df[['20_day_mean', 'Upper', 'Lower']].plot()
 ```
+
+# (9) Stock-Analysis Project
+- Corresponding JupyterNotebook with own solutions: 'Python_für_Finanzanalysen/code/07-Aktienmarkt-analyseprojekt/Aktienanalyse_Projekt-Aufgabe.ipynb'         
+- Solutions from the course in: 'Python_für_Finanzanalysen/code/07-Aktienmarkt-analyseprojekt/Aktienanalyse_Projekt-Loesung.ipynb'   
+
+<br/>
+<br/>
+
+# (10)
