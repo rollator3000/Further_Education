@@ -13,7 +13,8 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 7. Datasources  
 8. Pandas & DataSeries
 9. Stock-Analysis Project
-10. Time-Series
+10. Time-Series  
+11. Python Finance-Basics  
 
 <br/> 
 
@@ -680,19 +681,19 @@ df[['20_day_mean', 'Upper', 'Lower']].plot()
 <br/>
 
 # (10) Time-Series
-## 8.1 Basics 
+## 10.1 Basics 
 Time-Series can have:  
 - an up-, down- or stationary-**Trend**  
 - have **Saisonalities** *(e.g. amount of snowboard google-queries)*  
 - **Cycles** - Saisonalities without fix repetitions  
 
-## 8.2 StatsModels
+## 10.2 StatsModels
 - Library for various functions for time-series in Python
 - `conda install statsmodels` - details & examples on 'statsmodels.org'
 - Load GDP-data of USA with the package & plot it over time
 - Calculate the trend & cyclus with 'statsmodels' *('hpfilter', but many more possible)* -> plot this estimation against the real gdp  
 
-## 8.3 ETS
+## 10.3 ETS
 - Decompose your time-series into **Trends**, **Seasonality** & **Residuals**
 - Error-Trend-Seasonality models with:
     - Exponentail Smnoothing
@@ -700,7 +701,7 @@ Time-Series can have:
         - Decompose the passengers over time into trend, seasonal-trends & residuals   
 - Examples in 'code/08-Zeitreihenanalyse/3-ETS-Dekomposition.ipynb'
 
-## 8.4 EWMA
+## 10.4 EWMA
 - SMA *(Simple Moving Average)* is the moving average over the last x-days
     - the smaller the time-window the more noise
     - no values for the first x-days
@@ -715,7 +716,7 @@ Time-Series can have:
         - The more far away a time-point from now, the lower its weight
         - Value alpha can either be defined manually *(0 - 1)* or either be defined as span, center of mass, half-life, ... *(details in .ipynb)*  
 
-## 8.5 ARIMA
+## 10.5 ARIMA
 - Essential to understand time-series analysis, but not made for historic stock data  
 - ARIMA = AutoRegressive Integrated Moving Average && ARMA = AutoRegressive Moving Average  
 - Designed to predict future development & understanding the data in general  
@@ -730,7 +731,7 @@ Time-Series can have:
 - Non-Stationary data has to be converted to stationary data before ARIMA can be applied
 - Differentiation: Substract the next x values from t_i and replace it *(single, double, ...)* to convert to stationary data  
 
-## 8.6 Autocorrellationdiagramm (ACF)
+## 10.6 Autocorrellationdiagramm (ACF)
 - Shows the correlation of a time-series with it self delayed by x time-units *(x = Amount of delayed units, y = Correlation)*  
 - Copy the time-series twice and delete first element of list1 + last element pf list 2 & calculate the correlation then  
     - x-Value = 1 & y-Value is the corresponding correlation *(gradual decline, sharp drop-off, ...)*  
@@ -740,11 +741,41 @@ Time-Series can have:
     - d: Amount of raw-Obersationvs we need to differentiate 
     - q: Window size of the moving average
 
-## 8.7 Arima Code
+## 10.7 Arima Code
 - All code in 'code/08-Zeitreihenanalyse/4-ARIMA-und-Saisonale-ARIMA.ipynb' - examples for the whole chapter   
 - Process a data-set, inspect it *(moving average & sd)* and decompose it into trend & seasonality 
 - Check for stationarity, convert to non-stationary *(in different ways)* - needed to identify the the correct ARIMA model to use   
 - Applying the ARIMA Model, check residuals & get predicitons    
 - Book to Arima: https://people.duke.edu/~rnau/arimrule.htm  
 
+<br/>
+<br/>
 
+# (11) Python Finance-Basics  
+
+## 11.1 Sharp-Ratio
+- Portfolio: Collection of ETFs, Stocks, ...  
+- RETURN:
+    - Daily Return: Gain per day & stock   
+    - Cumulative Return: Gain over time *(e.g. holding-time)*  
+    - Average daily return: Average of the daily returns over time-span  
+    - SD(Average daily return)  
+- Sharp Ratio:  
+    - How to judge a portfolio - not only on overall return, but also with its variance   
+    - SR: > 1 good, > 2 very good, > 3 incredibly good  
+    - SHARP-RATIO: compares the return of an investment with its risk   
+        - Risk-free Rate: Return you get for no-risk invenstments *(interst in a bank, Government bond, ...)*  
+        - Expected Return: Expected/ real portfolio-return *(calculated via [mean average daily return])*   
+        - To get the annual sharp ratio, we need the multiplication with a k-Factor:  
+            - Daily: ASR = sqrt(252) * SR  
+            - Weekly: ASR = sqtr(52) * SR  
+            - Monthly: ASR = sqrt(12) * SR  
+![](notes_images/SHARP-RATIO.png)  
+
+## 11.2 Sharp-Ratio & portfolio allocation exercise  
+- Exercise in: 'code/09-Python-Finanzgrundlagen/01-Portfolio-Allokation-und-Sharpe-Quotient.ipynb'  
+- Create a portfolio of different stocks and different weighting  
+- Get the stocks cummulative returns
+- Overall portfolio performance incl. plot w/ / w/o single stocks of portfolio  
+- Get portfolio statistics *(daily return, total return, average daily return and sd of daily return)*  
+- Sharp-Ratio calulation  

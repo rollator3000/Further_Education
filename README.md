@@ -1,4 +1,4 @@
-	# Further Education
+# Further Education
 Collection of courses, books, etc. I've worked with - to each there are notes, files, as well as exercises.    
 
 ## Sections
