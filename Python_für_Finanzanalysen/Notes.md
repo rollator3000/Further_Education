@@ -13,6 +13,7 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 7. Datasources  
 8. Pandas & DataSeries
 9. Stock-Analysis Project
+10. Time-Series
 
 <br/> 
 
@@ -678,4 +679,72 @@ df[['20_day_mean', 'Upper', 'Lower']].plot()
 <br/>
 <br/>
 
-# (10)
+# (10) Time-Series
+## 8.1 Basics 
+Time-Series can have:  
+- an up-, down- or stationary-**Trend**  
+- have **Saisonalities** *(e.g. amount of snowboard google-queries)*  
+- **Cycles** - Saisonalities without fix repetitions  
+
+## 8.2 StatsModels
+- Library for various functions for time-series in Python
+- `conda install statsmodels` - details & examples on 'statsmodels.org'
+- Load GDP-data of USA with the package & plot it over time
+- Calculate the trend & cyclus with 'statsmodels' *('hpfilter', but many more possible)* -> plot this estimation against the real gdp  
+
+## 8.3 ETS
+- Decompose your time-series into **Trends**, **Seasonality** & **Residuals**
+- Error-Trend-Seasonality models with:
+    - Exponentail Smnoothing
+    - Error-Trend-Seasonality decompostion *(e.g. amount of passengeres over time)*  
+        - Decompose the passengers over time into trend, seasonal-trends & residuals   
+- Examples in 'code/08-Zeitreihenanalyse/3-ETS-Dekomposition.ipynb'
+
+## 8.4 EWMA
+- SMA *(Simple Moving Average)* is the moving average over the last x-days
+    - the smaller the time-window the more noise
+    - no values for the first x-days
+    - calculation of the average --> will never be at the max/ min of the true time-series
+    - can only describe trends, but not predict future values
+    - extrem values have a huge impact  
+- EMWA *(exponential weighted moving average)* aims to solve some of the issues with SMA
+    - Get estimations for all data-points + put more focus to new values *(old data points have less relevance)*
+    - Call via: `vector.ewm(span=12).mean()`
+    - Details in 'code/08-Zeitreihenanalyse/2-EWMA-Exponentially-weighted-moving-average.ipynb'
+        - Put more weights on the relevant data-points *(smaller weight the older)*
+        - The more far away a time-point from now, the lower its weight
+        - Value alpha can either be defined manually *(0 - 1)* or either be defined as span, center of mass, half-life, ... *(details in .ipynb)*  
+
+## 8.5 ARIMA
+- Essential to understand time-series analysis, but not made for historic stock data  
+- ARIMA = AutoRegressive Integrated Moving Average && ARMA = AutoRegressive Moving Average  
+- Designed to predict future development & understanding the data in general  
+- ARIMA have seasonal & non-seasonal models  
+- Stationary vs. non-stationary
+    - What makes data stationary? It has a constant mean, sd & cvoariance over time!
+    - If data has seasonailtiy they are not stationary  
+    - You can also apply a mathematical test: Augmented Dickey-Fuller Test
+![](notes_images/stationary.png)
+![](notes_images/stationary2.png)
+![](notes_images/stationary3.png)  
+- Non-Stationary data has to be converted to stationary data before ARIMA can be applied
+- Differentiation: Substract the next x values from t_i and replace it *(single, double, ...)* to convert to stationary data  
+
+## 8.6 Autocorrellationdiagramm (ACF)
+- Shows the correlation of a time-series with it self delayed by x time-units *(x = Amount of delayed units, y = Correlation)*  
+- Copy the time-series twice and delete first element of list1 + last element pf list 2 & calculate the correlation then  
+    - x-Value = 1 & y-Value is the corresponding correlation *(gradual decline, sharp drop-off, ...)*  
+- Deciding whether we should use AR or MA terms? --> Sign of the first autocorrelation  
+- Recommendations for the setting of arguments of ARIMA:  
+    - p: Amount of Lag-Observations in the model
+    - d: Amount of raw-Obersationvs we need to differentiate 
+    - q: Window size of the moving average
+
+## 8.7 Arima Code
+- All code in 'code/08-Zeitreihenanalyse/4-ARIMA-und-Saisonale-ARIMA.ipynb' - examples for the whole chapter   
+- Process a data-set, inspect it *(moving average & sd)* and decompose it into trend & seasonality 
+- Check for stationarity, convert to non-stationary *(in different ways)* - needed to identify the the correct ARIMA model to use   
+- Applying the ARIMA Model, check residuals & get predicitons    
+- Book to Arima: https://people.duke.edu/~rnau/arimrule.htm  
+
+
