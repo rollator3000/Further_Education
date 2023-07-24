@@ -779,3 +779,80 @@ Time-Series can have:
 - Overall portfolio performance incl. plot w/ / w/o single stocks of portfolio  
 - Get portfolio statistics *(daily return, total return, average daily return and sd of daily return)*  
 - Sharp-Ratio calulation  
+
+## 11.3 Portfolio optimization
+- How to optimize our portfolio?! Apply various weights to the various position and get the SHARP-Ratio  
+- Do this with a Monte-Carlo-Simulation & get the SHARP-Ratio for various weightings *(optimal are the ones one the edge with maximal return)*  
+![](notes_images/porfolio_opt.png)  
+- To find the optimal allocation, we have to mathematically optimize it *(maximize SHARP-Ratio // minimize negative SHARP-Ratio)*  
+
+## 11.4 Portfolio optimization exercise  
+- Exercise in: 'code/09-Python-Finanzgrundlagen/02-Portfolio-Optimierung.ipynb'  
+- Use the portfolio and get the correlation between stocks & average return per stock  
+- Arithmetic-Returns vs. Log-Returns *(has a detrending effect)*  
+- Calculate the SHARP-Ratio for various courses  
+- Create a Volatility-Return Plot with coloring by SHARP-Ratio  
+- Mathematically optimization *(with 'scipy.optimize')*  
+- Efficient Frontier *(Portfolios with the highest expected return for a given risklevel [simulate various risk-levels])*    
+
+## 11.5 Fond-Tpyes
+- ETF = Exchange Traded Funds *(Börsengehandelte Fonds)*  
+    - Consist of Fonds, Stocks, Commodities, ...    
+    - Public, transparent & can be bought by single persons  
+    - Splitting the money to multiple stocks, ... reduces the risks     
+    - 0.01 - 1% costs  
+    - Buy/ Sell like a regular stock  
+- Infestmentfonds  
+    - Pool of fonds from multiple investors used for investments in stocks, ...  
+    - For various settings *(e.g. certain areas, topics, ...)*  
+    - 0.5% - 3%  
+    - Buy/ Sell at the end of the day with a broker  
+- Hedgefonds  
+    - Organized by a Asset Manager that invests the capital of the fond to generate earnings  
+    - Manually managed!   
+    - 2% on the fonds % 20% on wins  
+    - Buy/ Sell depends on the contract   
+
+## 11.6 Order books  
+- Let's have a closer look on the process when a stock is sold/ bought  
+    - Buy or Sell  
+    - Stock symbol  
+    - Amount 
+    - Limit- or market-price  
+    - Price *(if it's limit order)*  
+- Example: Want to buy 'BAC', 200x with a limit-order of <= 199.95  
+![](notes_images/OrderBook.png)   
+- Need to wait now for offers with prices <= 199.95 and buy them then:  
+![](notes_images/OrderBook2.png)
+<br/>  
+- High frequency trading *(HFT)*  
+    - Bank wants to buy 90k of stocks and sends the info to BATS, NYSE, NASDAQ, ... 
+    - Bank buys 30k stocks on BATS -> HFT sees this and buys the stock on NYSE & NASDAQ, where the price will increase if the order of the bank arrives   
+
+## 11.7 Short Selling  
+- Make profit when stocks fall  
+    - X is worth 500 
+    - You lend 10 stocks from Mr.Y for totally 5.000 and sell them immeaditly  
+    - X is worth 400 now - buy 10 stocks for 4.000 and return them to Mr.Y  
+    - You earned 1.000 by short selling 
+    - High Risk + respect the OrderFees  
+
+## 11.6 CARM -- Capital Asset Pricing Model  
+- Model to distingiouish between the return of the market in general and the return of your portfolio  
+- Return of a portfolio to given time-point t = Sum(i = 1; n) w_i * r_i(t)  
+    - w_i weight of stock
+    - r_i(t) return of stock at 't'  
+- Return of the market in general is analog, BUT use the Market capitalization as weights *(w_i = MarketCap_i / sum(all MarketCaps))*  
+- Relation between stock performance & market performance is correlated  
+![](notes_images/CAPM.png)  
+
+
+
+
+
+
+
+
+
+- 
+- 
