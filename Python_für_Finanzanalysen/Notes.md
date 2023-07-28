@@ -15,6 +15,7 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 9. Stock-Analysis Project
 10. Time-Series  
 11. Python Finance-Basics  
+12. Basics of algorithmic trading  
 
 <br/> 
 
@@ -805,7 +806,7 @@ Time-Series can have:
 - Infestmentfonds  
     - Pool of fonds from multiple investors used for investments in stocks, ...  
     - For various settings *(e.g. certain areas, topics, ...)*  
-    - 0.5% - 3%  
+    - Costs 0.5% - 3% and is activly managed  
     - Buy/ Sell at the end of the day with a broker  
 - Hedgefonds  
     - Organized by a Asset Manager that invests the capital of the fond to generate earnings  
@@ -845,6 +846,74 @@ Time-Series can have:
 - Return of the market in general is analog, BUT use the Market capitalization as weights *(w_i = MarketCap_i / sum(all MarketCaps))*  
 - Relation between stock performance & market performance is correlated  
 ![](notes_images/CAPM.png)  
+- Corresponding code in: 'code/09-Python-Finanzgrundlagen/03-CAPM-Capital-Asset-Pricing-Model.ipynb'  
+    - Compare market-performance vs. single Stock *(compare courses, overall-return, daily-returns, ...)*  
+    - Estimate Alpha & Beta for the CAPM-Equation  
+
+## 11.7 Splits & Dividens  
+- StockSplits: Split the price by factor X and increase the amount of stocks by the factor X *(X > 1 --> StockSplit)*  
+- Dividens: Stocks can pay dividend per hold - attention use the adjusted closing-course as it respects dividend-payouts   
+- 'SurvivorShipBias': S6P500 consists of different companies now then it did in 2000  
+    - Think of this when doing back-testing!  
+
+## 11.8 Efficent Market Hypothesis  
+- Asset prices reflect all available information, hence it is impossible to "beat the market" consistently on a risk-adjusted basis since market prices should only react to new information  
+- If EHM is 100% true, Hedgefonds would only out-perform the market by luck...  
+- EHM may not 100% true, as there were times where the market was overvalued *(dot-com, finance-cirisis, ...)*  
+- We can assume that the market is not always 100% efficent!  
+
+<br/>
+<br/>
+
+# (12) Basics of algorithmic trading  
+
+## 12.1 Quantopia
+- Quantopia offers a ecoysstem to create algorithmic trades with contest *(comparable to Kaggle)*!    
+- Has integrated Jupyter Notebook to develop trading algorithms  
+- Inspect various trading algorithms and backtest it  
+- Was bought by RobinHood in 2021 and is now accessible via: 'https://blueshift.quantinsti.com' *(orignal Quantopian is not accessible anymore...)*   
+
+## 12.2 Research Basics in Quantopia  
+- Quantopian WebSite is down by now...  
+- Offered NoteBooks *(as JupyterNotebooks)* with special functions 
+    - 'get_pricing': Open, High, Low, Close, Volume, Price for each day  
+    - 'symbols': Get details to a stock like AssetName, Exchange, sid *(unique ID per stock)*, symbol, ...   
+
+## 12.3 Algorithmic Basics in Quantopian
+- Create a new algorithm for trading   
+- Could be back-tested with the Quantopian-WebSite  
+- Exemplary Algorithm: Adjust the Depot every minute, such that each stock has the following ratio: AAPL 27%, CSCP 20%, AMZN 53%  
+- Further functions: 
+    - can_trade(): Is the stock trade-able  
+    - current(): Is used to get the current information of a stock   
+    - history(): Get historic data like price, volume ... for a stock over a certain period of time  
+    - schedule_function(): Wann sollen bestimmte Funktionen ausgeführt werden *(Buy, Sell, ...)*  
+    - record(): Return portfolio information per stock *(e.g. close)*  
+
+## 12.4 Trading Algorithm  
+- "PairTrading" as trading algorithm  
+    - Use two highly correlated stocks > 0.9 *(e.g. two airlines)* and use the price-difference as signal, if a stock moves out of the correlation-zone  
+    - Get the spread of the two stocks *(price-difference between the two stocks)* and plot it  
+    - Normalize the spread *((x - mean(x)) / sd(x))*
+    - Plot the normalized spread, add the mean + add upper and lower limits as buy signal *(as the correlation is out of regular range)*  
+    - Instead if the regular mean, we can calculate the moving average for 1 & 30 days and normalize it then *((M_Avg1 - M_Avg30 / sd(M_Avg30)))*  
+- Implementation on Quantopian  
+
+## 12.5 Exercise  
+- Bolling Bands:  
+    - Calculate the 20-Day rolling mean & the 20-Day rolling SD  
+    - 20-Day rolling mean +/- 20-Day rolling SD as bands   
+    - Assumption is that the stock value is in between the bollinger bands in most of the time  
+    - If the stock-course is above the boilling band we sell, if it's below, we buy  
+- Can not be done, as Qunatopian is not availabe no more...  
+- Implementation incl. back-testing & vizualisation of the bolling bands  
+
+<br/>
+<br/>  
+
+# (13) Quantopian PipeLines  
+
+
 
 
 
