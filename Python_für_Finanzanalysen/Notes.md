@@ -16,6 +16,8 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 10. Time-Series  
 11. Python Finance-Basics  
 12. Basics of algorithmic trading  
+13. Quantopian PipeLines  
+14. Finance with Python for advanced  
 
 <br/> 
 
@@ -913,15 +915,37 @@ Time-Series can have:
 
 # (13) Quantopian PipeLines  
 
+## 13.1 PipeLines  
+- Useful for algorithms that follow a fix structure - e.g.:  
+    - Calc Skalarvalue for all assests  
+    - Filter assests based on the Skalarvalue  
+    - Define the weights for the various assests  
+    - Buy stocks such that they respnd to their weight  
+
+## 13.2 Factors  
+- Klassifikator: Function to get e.g. the class of a stock, simply pass timestamp & asset  
+- Factor: Function to get e.g. the 10-day moving average based on timestamp & asset   
+- Exemplary implementation in Quantopian *(not availabe no more...)*  
+    - Get the 30-day mean per stock  
+    - Get the latest closing-price  
+    - % difference between 10- & 30-day mean  
+![](notes_images/Qunatopian_Lines_1.png)   
+- We can furher filter this table with 'screen = final_filter' - e.g. 'final_filter' is difference between 10- & 30-day mean  
+- We can also filter before even querying the data with 'mask = small_price' - e.g. 'small_price' checks for price < 5  
+- Klassifikator can be used to get meta data for the stock - e.g. trading stock  
+
+## 13.3 Implementaion of pipeline in Quantopia  
+- Practical implementation of the pipelines in Quantopia  
+- Not too intereting, as we can not follow along, as Quantopia is not live no more...  
+- Theoretical things are thought in chapters before  
+
+<br/>
+<br/>  
+
+# (14) Finance with Python for advanced  
 
 
 
 
 
 
-
-
-
-
-- 
-- 
