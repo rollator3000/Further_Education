@@ -944,8 +944,8 @@ Time-Series can have:
 
 # (14) Finance with Python for advanced  
 
-
-
-
-
-
+## 14.1 Leverage
+- Taking a credit to invest it *(e.g. to buy a house)*  
+- With algorithmic trading it means to invest debt to enlarge the profit  
+    - Boost your expected profits, by enlarging your Depot with debts  
+- Leverage Ratio = (Debt + Capital) / Capital  
