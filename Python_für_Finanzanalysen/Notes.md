@@ -949,3 +949,24 @@ Time-Series can have:
 - With algorithmic trading it means to invest debt to enlarge the profit  
     - Boost your expected profits, by enlarging your Depot with debts  
 - Leverage Ratio = (Debt + Capital) / Capital  
+
+## 14.2 Hedging  
+- Connected to CAPM  
+- 'beta' represents how much influence the market *(e.g. S&P 500)* itself has on your depot  
+- The lower 'beta' the more independet your depot  
+- Select a stock & and the S&P500 *(or whatever you select as 'reference market')* and get the closing-values for every day   
+- Calculate the daily returns in % for each stock & day!
+    - Plot is as line-chart 
+    - When is your stock performing worse/ better than the reference market
+- Plot the return values of both stocks as scatter-plot & fit a linear model on it  
+    - Fit the model on x = return of the benchmark with added constant vs. y = return of the stock  
+    - Get the estimations for 'alpha' & 'beta':
+        - 'beta' represents the reference-market
+        - 'alpha' represents how well is the stock incorporated into the market  
+    - Plot the returns of stock & reference + add the estimated linear model line *(spy_line * alpha + beta)*  
+        - This shows us how big the dependencies are between the market and our stock  
+- Calculate the hedge: 
+    - -1 * beta * benchmark_returns + asset_returns  
+    - This removes the market from the stock performance itself *(beta)*  
+- Plot the hedge over time parallel to the returns of the stock & reference market  
+    - How performs the stock in comparison to the market  
