@@ -17,7 +17,7 @@ Notes to the Online-Course 'Python für Finanzanalysen und algorithmisches Tradi
 11. Python Finance-Basics  
 12. Basics of algorithmic trading  
 13. Quantopian PipeLines  
-14. Finance with Python for advanced  
+14. Advanced Finance with Python  
 
 <br/> 
 
@@ -942,7 +942,7 @@ Time-Series can have:
 <br/>
 <br/>  
 
-# (14) Finance with Python for advanced  
+# (14) Advanced Finance with Python  
 
 ## 14.1 Leverage
 - Taking a credit to invest it *(e.g. to buy a house)*  
@@ -952,12 +952,10 @@ Time-Series can have:
 
 ## 14.2 Hedging  
 - Connected to CAPM  
-- 'beta' represents how much influence the market *(e.g. S&P 500)* itself has on your depot  
-- The lower 'beta' the more independet your depot  
-- Select a stock & and the S&P500 *(or whatever you select as 'reference market')* and get the closing-values for every day   
+- 'beta' represents how much influence the market *(e.g. S&P 500)* itself has on your depot *(the lower 'beta' the more independet)*   
+- Select a stock & and a reference market *(e.g. the S&P 500)* and get the closing-values for every day   
 - Calculate the daily returns in % for each stock & day!
-    - Plot is as line-chart 
-    - When is your stock performing worse/ better than the reference market
+    - Plot it as line-chart per stock to see when your stock is performing worse/ better than the reference  
 - Plot the return values of both stocks as scatter-plot & fit a linear model on it  
     - Fit the model on x = return of the benchmark with added constant vs. y = return of the stock  
     - Get the estimations for 'alpha' & 'beta':
@@ -970,3 +968,28 @@ Time-Series can have:
     - This removes the market from the stock performance itself *(beta)*  
 - Plot the hedge over time parallel to the returns of the stock & reference market  
     - How performs the stock in comparison to the market  
+
+## 14.3 Portfolio analysis with PyFolio  
+- Get the daily returns your portfolio and select a reference portfolio *(e.g. S&P 500)*  
+- 'Empicrical' offers a range of methods to analyse a portfolio *(e.g. Sharp-Ratio, volatility, 'beta' between two portfolios, ...)*   
+- 'PyFolio' offers a wide range of diagrams & tear-sheets  
+    - Get the daily & cummulative returns over time of the portfolio  
+    - Get distribution of the annual/ monthly returns as barplot/ heatmap  
+    - Get the distribution of the returns per day/ month/ year  
+    - Get the rolling 'beta' estimation between portfolio I & II over time   
+    - Get the rolling sharp-ratio over time  
+    - Get the rolling french over time  
+    - Get the top 'draw-down' periods  
+    - Portfolio Analysis:
+        - Top10 long positions of all time   
+        - Top10 short positions of all time   
+        - Top10 positions of all time   
+        - All positions ever held  
+        - Portfolio allocation over time  
+
+## 14.4 Stock Sentiment Analysis  
+- There is more data to feed an alogrithm besides the numeric data from the stock  
+- A very common one is the sentiment analysis:  
+    - Analyse text to get its sentiment *(negative/ postive)* for e.g. relevant stock news  
+    - Data could come from various sources - e.g. Finance Papers, Social Media, News, ...  
+- Create a trading algorithm with quantopian and add sentiment analysis as factors to buy/ sell & compare various approaches  
