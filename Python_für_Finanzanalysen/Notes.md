@@ -993,3 +993,22 @@ Time-Series can have:
     - Analyse text to get its sentiment *(negative/ postive)* for e.g. relevant stock news  
     - Data could come from various sources - e.g. Finance Papers, Social Media, News, ...  
 - Create a trading algorithm with quantopian and add sentiment analysis as factors to buy/ sell & compare various approaches  
+
+## 14.5 Forward transactions  
+- A 'Derivat' is an example for a forward transaction  
+    - Derivat: Contract betwen two or more - value of the contract based on stocks, index, ...  
+- Forwards:  
+    - Aggrement between two parties to buy/ sell an asset for a fix price in the future   
+    - The seller is in the short-position, the buyer in the long-position  
+    - e.g. contract between a petrol station & a refinery for petrol for a fixed rate over a year  
+        - **UP:** This benefits the long position, as the fixed price is below the market price  
+        - **DOWN:** This benefits the short position, as the fixed price is higher than the the market price  
+    - Difference between fixed price 'K' and market price to time 't' S(t)  
+        - get the difference between the price 'K' & 'S(t)'   
+- Futures:  
+    - Standardized Forwards for the trade on the stock-market  
+    - Certain amount of the asset for a fix price  
+    - Has a third party to reduce the single risk of failure  
+- Basically traded on the stock market like regular stocks  
+    - Different symbols e.g. CLF16 = CrudeOil with delivery in January 2016  
+    - Get the price, volume, open, high, close, ...  
