@@ -1012,3 +1012,6 @@ Time-Series can have:
 - Basically traded on the stock market like regular stocks  
     - Different symbols e.g. CLF16 = CrudeOil with delivery in January 2016  
     - Get the price, volume, open, high, close, ...  
+    - Towards the end of a future, the price approaches the market price  
+- Collections of futures *(multiple various futures)*  
+    - Plot the volume, price, ... of the collection as a single line  
