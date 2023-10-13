@@ -15,7 +15,9 @@ For each course/ book, there is a seperate folder - each containing code, files 
 	- Financial analysis & algorithmic trading with Python
 	- Slides, notes, data & code
 
-  
+#### Python Exercises
+	- Python exercises with problem, solution, ...
+
 #### 'Template'
 	- Template repository with a given folder structure   
 	- Template README.md, Script.R, Script.Py & Script.Rmd files
