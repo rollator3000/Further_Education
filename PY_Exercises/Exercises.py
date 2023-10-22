@@ -99,6 +99,55 @@ def find_missing_int(int_list):
     return len(int_list_unique_ordered) + 1
      
 # 3-2 Check it:
-find_missing_int([-1, 0, 1, 2, 3, 4, 5, 7, 8])
-find_missing_int([-1, 1212, 1, 2, 3, 4, 5, 7, 8])
-find_missing_int([-1, 0, 1, 2, 3, 4, 5, 7, 6, 8])
+find_missing_int([-1, 0, 1, 2, 3, 4, 5, 7, 8])     # Should be 6
+find_missing_int([-1, 1212, 1, 2, 3, 4, 5, 7, 8])  # Should be 6
+find_missing_int([-1, 0, 1, 2, 3, 4, 5, 7, 6, 8])  # Should be 9
+
+# %% (4) 
+"""
+- This problem was asked by Snapchat.
+- Given an array of time intervals (start, end) for classroom lectures (possibly overlapping), find the minimum number of rooms required.
+- For example, given [(30, 75), (0, 50), (60, 150)], you should return 2
+"""
+# 4-1 Define Function
+def amount_class_rooms(classes):
+    
+    # 1) Check if the 'classes' list contains less than 2 elements -> 1 room
+    if len(classes) < 2: return(1)
+    
+    # 2) Get the start and end times of every class 
+    start_times = [c[0] for c in classes]
+    end_times   = [c[1] for c in classes]
+    
+    # 3) Sort the start and end times
+    start_times.sort()
+    end_times.sort()
+    
+    # 4) Define variables for counting the needed amount of rooms
+    i = 1; j = 0              # Iterator variables to compare start and end times
+    num_classes = 1; res = 1  # Amount of needed rooms (so far)
+    
+    # 5) Loop until we iterated over all classes-elements
+    while i < len(classes) and j < len(classes):
+        
+        # If the curent start-time < current end-time: Count up 'num_classes'
+        # & count it up/down depending 
+        if start_times[i] < end_times[j]:
+            num_classes += 1
+            i           += 1
+            
+            # Only add 'num_classes' to res, when it is > res 
+            # (else this case would have already been covered)
+            if num_classes > res:
+                res = num_classes
+            
+        else:
+            num_classes -= 1
+            j           += 1
+    
+    return(res)
+     
+# 4-2 Check it:
+amount_class_rooms([(30, 75), (0, 50), (60, 150)])          # Should be 2
+amount_class_rooms([(30, 75), (0, 50), (60, 150), (0, 32)]) # Should be 3
+amount_class_rooms([(0, 15), (0, 20), (10, 12), (0, 17)])   # SHould be 4
